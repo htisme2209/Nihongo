@@ -50,6 +50,18 @@
         </div>
       </section>
 
+      <section class="flashcard-bar" aria-labelledby="flashcard-heading">
+        <div class="flashcard-intro">
+          <span class="flashcard-stamp" aria-hidden="true">卡</span>
+          <div>
+            <p class="eyebrow">HỌC BẰNG THẺ</p>
+            <h2 id="flashcard-heading">Flashcard <span id="flashcard-lesson-label">Bài 1</span></h2>
+            <p id="flashcard-count">Lật từng thẻ để nhớ từ vựng theo nhịp của bạn.</p>
+          </div>
+        </div>
+        <button class="flashcard-start" id="start-flashcards" type="button">Học flashcard <span>→</span></button>
+      </section>
+
       <section class="content-section mode-section" aria-labelledby="mode-title">
         <div class="section-heading compact">
           <div>
@@ -136,6 +148,55 @@
         <div class="result-actions">
           <button class="secondary-button" id="finish-button" type="button">Về trang bài học</button>
           <button class="primary-button" id="retry-button" type="button">Luyện lại <span>↻</span></button>
+        </div>
+      </section>
+    </dialog>
+
+    <dialog class="flashcard-dialog" id="flashcard-dialog" aria-labelledby="flashcard-dialog-title">
+      <h2 class="sr-only" id="flashcard-dialog-title">Flashcard từ vựng</h2>
+      <div class="flashcard-topbar">
+        <button class="close-button" id="close-flashcards" type="button" aria-label="Đóng flashcard">×</button>
+        <div class="progress-group">
+          <span id="flashcard-progress-text">Bài 1 · Thẻ 1 / 1</span>
+          <div class="progress-track"><span id="flashcard-progress-bar"></span></div>
+        </div>
+        <button class="shuffle-button" id="shuffle-flashcards" type="button" aria-label="Trộn lại các thẻ">↻ <span>Trộn</span></button>
+      </div>
+
+      <section class="flashcard-panel" id="flashcard-panel">
+        <p class="quiz-mode">FLASHCARD · CHẠM ĐỂ LẬT</p>
+        <button class="flashcard-scene" id="flashcard-card" type="button" aria-pressed="false" aria-label="Chạm để lật thẻ">
+          <span class="flashcard-card" id="flashcard-card-inner">
+            <span class="flashcard-face flashcard-front">
+              <span class="card-corner">MẶT TRƯỚC</span>
+              <strong class="flashcard-primary" id="flashcard-primary">私</strong>
+              <span class="flashcard-reading" id="flashcard-reading">わたし</span>
+              <span class="flashcard-prompt">Chạm để xem nghĩa</span>
+            </span>
+            <span class="flashcard-face flashcard-back">
+              <span class="card-corner">MẶT SAU</span>
+              <strong class="flashcard-meaning" id="flashcard-meaning">tôi</strong>
+              <span class="flashcard-detail" id="flashcard-detail">私 · わたし</span>
+              <span class="hanviet-badge" id="flashcard-hanviet" hidden></span>
+            </span>
+          </span>
+        </button>
+        <p class="flashcard-help">Chạm để lật · Vuốt sang trái/phải để chuyển thẻ</p>
+        <div class="flashcard-actions">
+          <button class="flashcard-previous" id="flashcard-previous" type="button" aria-label="Thẻ trước">←</button>
+          <button class="flashcard-review" id="flashcard-review" type="button">Cần ôn</button>
+          <button class="flashcard-known" id="flashcard-known" type="button">Đã nhớ</button>
+        </div>
+      </section>
+
+      <section class="flashcard-result" id="flashcard-result" hidden>
+        <p class="eyebrow">HOÀN THÀNH BỘ THẺ</p>
+        <p class="flashcard-result-number"><span id="flashcard-known-total">0</span>/<span id="flashcard-total">0</span></p>
+        <h2 id="flashcard-title">Bạn đã lật hết các thẻ.</h2>
+        <p id="flashcard-result-copy"></p>
+        <div class="flashcard-result-actions">
+          <button class="secondary-button" id="finish-flashcards" type="button">Về trang bài học</button>
+          <button class="primary-button" id="retry-flashcards" type="button">Ôn lại từ cần ôn <span>↻</span></button>
         </div>
       </section>
     </dialog>

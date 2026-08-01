@@ -92,6 +92,18 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
 .lesson-progress { position: absolute; right: 17px; bottom: 18px; left: 17px; height: 4px; overflow: hidden; background: var(--paper-deep); }
 .lesson-progress i { display: block; height: 100%; background: var(--forest); }
 
+.flashcard-bar { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-top: 20px; padding: 25px 27px; border: 1px solid #aac1a6; border-radius: 4px 34px 4px 4px; background: linear-gradient(110deg, #e1ebd9, #f4efde); }
+.flashcard-intro { display: flex; align-items: center; gap: 16px; }
+.flashcard-stamp { display: grid; flex: 0 0 52px; width: 52px; height: 52px; place-items: center; color: var(--cream); background: var(--forest); border-radius: 50% 50% 44% 50%; font-family: var(--display); font-size: 1.55rem; transform: rotate(-7deg); }
+.flashcard-intro .eyebrow { margin-bottom: 5px; }
+.flashcard-intro h2 { font-size: 1.65rem; }
+.flashcard-intro h2 span { color: var(--tomato); font-style: italic; }
+.flashcard-intro p:last-child { max-width: 550px; margin: 8px 0 0; color: var(--moss); font-size: .8rem; font-weight: 700; line-height: 1.45; }
+.flashcard-start { flex: 0 0 auto; min-height: 50px; padding: 12px 17px; color: var(--cream); border: 0; border-radius: 3px; background: var(--forest); box-shadow: 0 4px 0 #173426; font-weight: 800; transition: transform .18s ease, box-shadow .18s ease; }
+.flashcard-start:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #173426; }
+.flashcard-start span { display: inline-block; margin-left: 5px; transition: transform .18s ease; }
+.flashcard-start:hover span { transform: translateX(4px); }
+
 .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
 .mode-card { display: flex; align-items: center; gap: 13px; padding: 19px; text-align: left; color: var(--ink); border: 1px solid var(--line); border-radius: 4px; background: rgb(255 253 247 / 46%); transition: border .2s ease, background .2s ease, transform .2s ease; }
 .mode-card:hover { transform: translateY(-2px); border-color: var(--moss); }
@@ -155,10 +167,46 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
 .review-item strong { color: var(--tomato); }
 .result-actions { display: flex; justify-content: center; gap: 12px; }
 .secondary-button { padding: 12px 15px; color: var(--forest); border: 1px solid var(--moss); background: transparent; }
+
+.flashcard-dialog { width: min(720px, calc(100% - 28px)); min-height: min(700px, calc(100dvh - 28px)); padding: 0; overflow: hidden; color: var(--ink); border: 0; border-radius: 5px 52px 5px 5px; background: var(--cream); box-shadow: 0 28px 100px rgb(11 26 18 / 45%); }
+.flashcard-dialog::backdrop { background: rgb(18 35 27 / 65%); backdrop-filter: blur(3px); }
+.flashcard-topbar { display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; min-height: 75px; padding: 0 24px; border-bottom: 1px solid var(--line); }
+.shuffle-button { justify-self: end; min-height: 38px; padding: 7px 8px; color: var(--forest); border: 1px solid var(--line); border-radius: 3px; background: transparent; font-size: .73rem; font-weight: 800; }
+.shuffle-button:hover { border-color: var(--moss); background: var(--paper-deep); }
+.flashcard-panel, .flashcard-result { padding: clamp(31px, 6vw, 52px); text-align: center; }
+.flashcard-panel .quiz-mode { margin-bottom: 20px; }
+.flashcard-scene { display: block; width: min(510px, 100%); min-height: clamp(290px, 45dvh, 410px); padding: 0; margin: 0 auto; perspective: 1200px; touch-action: pan-y; text-align: left; border: 0; background: transparent; }
+.flashcard-card { position: relative; display: block; width: 100%; height: 100%; min-height: inherit; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.2, .75, .25, 1); }
+.flashcard-card.is-flipped { transform: rotateY(180deg); }
+.flashcard-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 42px; overflow: hidden; border-radius: 5px 42px 5px 5px; backface-visibility: hidden; box-shadow: 0 16px 35px rgb(20 38 28 / 16%); }
+.flashcard-front { color: var(--cream); background: linear-gradient(145deg, #315b45, #1e392c); }
+.flashcard-front::after { position: absolute; right: -50px; bottom: -75px; width: 210px; height: 210px; border: 1px solid rgb(255 253 247 / 16%); border-radius: 50%; content: ""; box-shadow: 0 0 0 35px rgb(255 253 247 / 4%); }
+.flashcard-back { background: var(--paper-deep); transform: rotateY(180deg); }
+.card-corner { position: absolute; top: 20px; left: 22px; color: var(--sun); font-size: .63rem; font-weight: 900; letter-spacing: .14em; }
+.flashcard-back .card-corner { color: var(--tomato); }
+.flashcard-primary, .flashcard-meaning { position: relative; z-index: 1; max-width: 100%; overflow-wrap: anywhere; font-family: var(--display); font-size: clamp(4rem, 12vw, 7rem); font-weight: 500; line-height: .95; letter-spacing: -.055em; text-align: center; }
+.flashcard-meaning { font-size: clamp(2.25rem, 7vw, 4rem); }
+.flashcard-reading { position: relative; z-index: 1; margin-top: 17px; color: #d2e1d0; font-size: 1.1rem; font-weight: 700; }
+.flashcard-prompt { position: absolute; bottom: 23px; color: #bcd0ba; font-size: .72rem; font-weight: 800; }
+.flashcard-detail { max-width: 100%; margin-top: 18px; color: var(--moss); font-size: .94rem; font-weight: 700; text-align: center; overflow-wrap: anywhere; }
+.hanviet-badge { margin-top: 13px; padding: 7px 10px; color: #884130; border: 1px solid #dcac91; border-radius: 999px; background: #f7dfcf; font-size: .7rem; font-weight: 900; letter-spacing: .04em; }
+.flashcard-help { margin: 17px 0; color: var(--moss); font-size: .72rem; font-weight: 700; }
+.flashcard-actions { display: grid; grid-template-columns: 58px 1fr 1fr; width: min(510px, 100%); margin: 0 auto; gap: 9px; }
+.flashcard-actions button { min-height: 52px; border-radius: 3px; font-weight: 900; }
+.flashcard-previous { color: var(--forest); border: 1px solid var(--line); background: var(--cream); font-size: 1.2rem; }
+.flashcard-previous:disabled { opacity: .38; cursor: not-allowed; }
+.flashcard-review { color: #913523; border: 1px solid #e6b09e; background: #f7dfd5; }
+.flashcard-known { color: var(--cream); border: 1px solid var(--forest); background: var(--forest); }
+.flashcard-result { padding-top: clamp(76px, 13vw, 112px); }
+.flashcard-result-number { margin-bottom: 7px; color: var(--forest); font-family: var(--display); font-size: clamp(4rem, 12vw, 6.2rem); line-height: .9; }
+.flashcard-result-number span + span { color: var(--moss); }
+.flashcard-result h2 { margin-bottom: 13px; }
+.flashcard-result > p:not(.eyebrow):not(.flashcard-result-number) { max-width: 430px; margin: 0 auto 27px; color: var(--moss); line-height: 1.55; }
+.flashcard-result-actions { display: flex; justify-content: center; gap: 12px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 @media (hover: none) {
-  .lesson-card:hover, .mode-card:hover, .primary-button:hover { transform: none; }
+  .lesson-card:hover, .mode-card:hover, .primary-button:hover, .flashcard-start:hover { transform: none; }
   .lesson-card:hover { box-shadow: none; }
 }
 
@@ -189,6 +237,9 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .lesson-card { min-height: 122px; padding: 14px; scroll-snap-align: start; }
   .lesson-number { margin-bottom: 15px; }
   .lesson-progress { right: 14px; bottom: 14px; left: 14px; }
+  .flashcard-bar { display: block; margin-top: 15px; padding: 20px; }
+  .flashcard-intro { align-items: flex-start; }
+  .flashcard-start { width: 100%; margin-top: 16px; }
   .mode-grid { grid-template-columns: 1fr; gap: 9px; }
   .mode-card { min-height: 76px; padding: 14px 16px; }
   .mode-icon { flex-basis: 46px; width: 46px; height: 46px; }
@@ -215,12 +266,25 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .next-button { width: 100%; margin-top: 2px; }
   .result-actions { display: grid; width: 100%; }
   .result-actions .secondary-button, .result-actions .primary-button { width: 100%; }
+  .flashcard-dialog { max-height: calc(100dvh - 18px); overflow-y: auto; overscroll-behavior: contain; }
+  .flashcard-topbar { position: sticky; z-index: 2; top: 0; grid-template-columns: 52px 1fr 66px; min-height: 68px; padding: 0 14px; background: var(--cream); }
+  .shuffle-button { min-width: 52px; min-height: 44px; }
+  .shuffle-button span { display: none; }
+  .flashcard-panel, .flashcard-result { padding: 34px 24px; }
+  .flashcard-scene { min-height: min(390px, 49dvh); }
+  .flashcard-face { padding: 34px 22px; }
+  .flashcard-actions button { min-height: 54px; }
+  .flashcard-result-actions { display: grid; width: 100%; }
+  .flashcard-result-actions .secondary-button, .flashcard-result-actions .primary-button { width: 100%; }
 }
 
 @media (max-width: 600px) {
   .practice-dialog { width: 100%; min-height: 100dvh; height: 100dvh; max-height: 100dvh; margin: 0; overflow-y: auto; overscroll-behavior: contain; border-radius: 0; }
   .dialog-topbar { min-height: calc(68px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); }
   .quiz-panel, .result-panel { min-height: calc(100dvh - 68px - env(safe-area-inset-top)); padding-bottom: calc(36px + env(safe-area-inset-bottom)); }
+  .flashcard-dialog { width: 100%; min-height: 100dvh; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; }
+  .flashcard-topbar { min-height: calc(68px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); }
+  .flashcard-panel, .flashcard-result { min-height: calc(100dvh - 68px - env(safe-area-inset-top)); padding-bottom: calc(32px + env(safe-area-inset-bottom)); }
 }
 
 @media (max-width: 430px) {
@@ -232,12 +296,20 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .lesson-grid { grid-auto-columns: minmax(108px, 39vw); grid-template-rows: repeat(2, 112px); }
   .lesson-card { min-height: 112px; }
   .practice-bar { margin-inline: -2px; padding: 15px; }
+  .flashcard-bar { margin-inline: -2px; padding: 17px; }
+  .flashcard-stamp { flex-basis: 44px; width: 44px; height: 44px; }
+  .flashcard-intro h2 { font-size: 1.45rem; }
+  .flashcard-intro p:last-child { font-size: .74rem; }
   .practice-actions { grid-template-columns: 1fr; }
   .question-count { min-height: 46px; }
   .question-count select { flex: 1; text-align: right; }
   .quiz-panel, .result-panel { padding-right: 19px; padding-left: 19px; }
   .review-item { align-items: flex-start; font-size: .78rem; }
   .review-item strong { max-width: 48%; text-align: right; overflow-wrap: anywhere; }
+  .flashcard-panel, .flashcard-result { padding-right: 18px; padding-left: 18px; }
+  .flashcard-scene { min-height: min(355px, 47dvh); }
+  .flashcard-primary { font-size: clamp(3.6rem, 20vw, 5.2rem); }
+  .flashcard-help { margin: 13px 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

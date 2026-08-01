@@ -1,4 +1,5 @@
 const ANSWER_DATA_FILE = "minna_bai1_25_nghia_dap_an_kanji_hanviet.csv";
+const FLASHCARD_STORAGE_KEY = "kotoba-dojo-flashcard-progress";
 
 const modes = {
   hiragana: {
@@ -41,9 +42,21 @@ const state = {
   incorrect: [],
 };
 
+const flashcardState = {
+  deck: [],
+  index: 0,
+  isFlipped: false,
+  knownIds: new Set(),
+  reviewIds: new Set(),
+};
+
 const $ = (selector) => document.querySelector(selector);
 const lessonGrid = $("#lesson-grid");
 const dialog = $("#practice-dialog");
+const flashcardDialog = $("#flashcard-dialog");
+const flashcardCard = $("#flashcard-card");
+let flashcardPointerStart = null;
+let ignoreFlashcardClick = false;
 
 function parseCsv(text) {
   const rows = [];
@@ -109,6 +122,23 @@ function saveProgress(id, result) {
   localStorage.setItem("kotoba-dojo-progress", JSON.stringify(progress));
 }
 
+function getFlashcardProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(FLASHCARD_STORAGE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveFlashcardProgress(id, outcome) {
+  const progress = getFlashcardProgress();
+  const record = progress[id] || { known: 0, review: 0, lastSeen: "" };
+  record[outcome] += 1;
+  record.lastSeen = new Date().toISOString();
+  progress[id] = record;
+  localStorage.setItem(FLASHCARD_STORAGE_KEY, JSON.stringify(progress));
+}
+
 function progressForLesson(lesson) {
   const words = state.words.filter((word) => word.lesson === lesson);
   const progress = getProgress();
@@ -152,6 +182,7 @@ function setLesson(lesson) {
   state.selectedLesson = Number(lesson);
   $(".selected-lesson-label").textContent = `Bài ${state.selectedLesson}`;
   renderLessons();
+  updateFlashcardCTA();
 }
 
 function setMode(mode) {
@@ -178,6 +209,127 @@ function eligibleWords() {
 
 function shuffled(items) {
   return [...items].sort(() => Math.random() - 0.5);
+}
+
+function flashcardWords() {
+  return state.words.filter((word) => word.lesson === state.selectedLesson && (word.kanji || word.hiragana));
+}
+
+function updateFlashcardCTA() {
+  const count = flashcardWords().length;
+  $("#flashcard-lesson-label").textContent = `Bài ${state.selectedLesson}`;
+  $("#flashcard-count").textContent = count
+    ? `${count} thẻ từ vựng. Chạm để lật, rồi tự đánh giá mức độ ghi nhớ.`
+    : "Bài này chưa có thẻ từ vựng để hiển thị.";
+}
+
+function flashcardFrontText(word) {
+  return word.kanji || word.hiragana || "—";
+}
+
+function renderFlashcard() {
+  const word = flashcardState.deck[flashcardState.index];
+  if (!word) return;
+  const primary = flashcardFrontText(word);
+  const reading = word.kanji && word.hiragana ? word.hiragana : "";
+  const detail = [word.kanji, word.hiragana].filter(Boolean).join("  ·  ");
+  const hanViet = $("#flashcard-hanviet");
+
+  $("#flashcard-progress-text").textContent = `Bài ${state.selectedLesson} · Thẻ ${flashcardState.index + 1} / ${flashcardState.deck.length}`;
+  $("#flashcard-progress-bar").style.width = `${((flashcardState.index + 1) / flashcardState.deck.length) * 100}%`;
+  $("#flashcard-primary").textContent = primary;
+  $("#flashcard-reading").textContent = reading;
+  $("#flashcard-reading").hidden = !reading;
+  $("#flashcard-meaning").textContent = word.meaning;
+  $("#flashcard-detail").textContent = detail || "Từ vựng tiếng Nhật";
+  hanViet.textContent = word.hanViet ? `Hán - Việt: ${word.hanViet}` : "";
+  hanViet.hidden = !word.hanViet;
+  $("#flashcard-card-inner").classList.toggle("is-flipped", flashcardState.isFlipped);
+  flashcardCard.setAttribute("aria-pressed", flashcardState.isFlipped);
+  flashcardCard.setAttribute("aria-label", flashcardState.isFlipped ? "Đang hiển thị đáp án. Chạm để lật lại." : "Chạm để lật thẻ và xem nghĩa.");
+  $("#flashcard-previous").disabled = flashcardState.index === 0;
+}
+
+function startFlashcards(words = null) {
+  const candidates = words || flashcardWords();
+  if (!candidates.length) {
+    alert("Bài này chưa có dữ liệu phù hợp để tạo flashcard.");
+    return;
+  }
+  flashcardState.deck = shuffled(candidates);
+  flashcardState.index = 0;
+  flashcardState.isFlipped = false;
+  flashcardState.knownIds = new Set();
+  flashcardState.reviewIds = new Set();
+  $("#flashcard-panel").hidden = false;
+  $("#flashcard-result").hidden = true;
+  if (!flashcardDialog.open) flashcardDialog.showModal();
+  renderFlashcard();
+}
+
+function toggleFlashcard() {
+  if (!flashcardState.deck.length) return;
+  flashcardState.isFlipped = !flashcardState.isFlipped;
+  renderFlashcard();
+}
+
+function moveFlashcard(delta) {
+  const nextIndex = flashcardState.index + delta;
+  if (nextIndex < 0 || nextIndex >= flashcardState.deck.length) return;
+  flashcardState.index = nextIndex;
+  flashcardState.isFlipped = false;
+  renderFlashcard();
+}
+
+function markFlashcard(outcome) {
+  const word = flashcardState.deck[flashcardState.index];
+  if (!word) return;
+  saveFlashcardProgress(word.id, outcome);
+  if (outcome === "known") {
+    flashcardState.knownIds.add(word.id);
+    flashcardState.reviewIds.delete(word.id);
+  } else {
+    flashcardState.reviewIds.add(word.id);
+    flashcardState.knownIds.delete(word.id);
+  }
+
+  if (flashcardState.index + 1 < flashcardState.deck.length) {
+    flashcardState.index += 1;
+    flashcardState.isFlipped = false;
+    renderFlashcard();
+  } else {
+    showFlashcardResult();
+  }
+}
+
+function shuffleFlashcards() {
+  if (flashcardState.deck.length < 2) return;
+  flashcardState.deck = shuffled(flashcardState.deck);
+  flashcardState.index = 0;
+  flashcardState.isFlipped = false;
+  flashcardState.knownIds = new Set();
+  flashcardState.reviewIds = new Set();
+  renderFlashcard();
+}
+
+function showFlashcardResult() {
+  const known = flashcardState.knownIds.size;
+  const review = flashcardState.reviewIds.size;
+  $("#flashcard-panel").hidden = true;
+  $("#flashcard-result").hidden = false;
+  $("#flashcard-progress-bar").style.width = "100%";
+  $("#flashcard-known-total").textContent = known;
+  $("#flashcard-total").textContent = flashcardState.deck.length;
+  $("#flashcard-title").textContent = review ? "Bạn đã hoàn thành bộ thẻ." : "Tất cả thẻ đều đã nhớ!";
+  $("#flashcard-result-copy").textContent = review
+    ? `${review} từ được đánh dấu cần ôn. Hãy xem lại ngay một lượt ngắn.`
+    : "Nhịp học rất tốt. Chuyển sang bài khác hoặc tự kiểm tra bằng chế độ luyện tập.";
+  $("#retry-flashcards").innerHTML = review ? "Ôn lại từ cần ôn <span>↻</span>" : "Xem lại bộ thẻ <span>↻</span>";
+}
+
+function closeFlashcards() {
+  flashcardDialog.close();
+  updateFlashcardCTA();
 }
 
 function startPractice(words = null) {
@@ -314,6 +466,7 @@ async function initialize() {
     if (!state.words.length) throw new Error("Du lieu tu vung trong");
     $("#lesson-total").textContent = new Set(state.words.map((word) => word.lesson)).size;
     renderLessons();
+    updateFlashcardCTA();
     updateOverview();
   } catch (error) {
     lessonGrid.innerHTML = `<p class="loading">Không thể nạp dữ liệu. Hãy mở trang qua một local server (ví dụ: <code>python -m http.server</code>).</p>`;
@@ -331,6 +484,7 @@ $("#mode-grid").addEventListener("click", (event) => {
 });
 $("#start-button").addEventListener("click", () => startPractice());
 $("#continue-button").addEventListener("click", () => startPractice());
+$("#start-flashcards").addEventListener("click", () => startFlashcards());
 $("#answer-form").addEventListener("submit", (event) => { event.preventDefault(); checkAnswer(); });
 $("#hint-button").addEventListener("click", revealAnswer);
 $("#next-button").addEventListener("click", nextQuestion);
@@ -338,5 +492,39 @@ $("#close-practice").addEventListener("click", closePractice);
 $("#finish-button").addEventListener("click", closePractice);
 $("#retry-button").addEventListener("click", () => startPractice(state.incorrect.length ? state.incorrect : state.queue));
 dialog.addEventListener("click", (event) => { if (event.target === dialog) closePractice(); });
+
+flashcardCard.addEventListener("click", () => {
+  if (ignoreFlashcardClick) {
+    ignoreFlashcardClick = false;
+    return;
+  }
+  toggleFlashcard();
+});
+flashcardCard.addEventListener("pointerdown", (event) => {
+  if (event.pointerType === "mouse") return;
+  flashcardPointerStart = { x: event.clientX, y: event.clientY };
+});
+flashcardCard.addEventListener("pointerup", (event) => {
+  if (!flashcardPointerStart) return;
+  const deltaX = event.clientX - flashcardPointerStart.x;
+  const deltaY = event.clientY - flashcardPointerStart.y;
+  flashcardPointerStart = null;
+  if (Math.abs(deltaX) < 48 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+  ignoreFlashcardClick = true;
+  if (deltaX < 0 && flashcardState.isFlipped) moveFlashcard(1);
+  if (deltaX > 0) moveFlashcard(-1);
+});
+flashcardCard.addEventListener("pointercancel", () => { flashcardPointerStart = null; });
+$("#flashcard-previous").addEventListener("click", () => moveFlashcard(-1));
+$("#flashcard-review").addEventListener("click", () => markFlashcard("review"));
+$("#flashcard-known").addEventListener("click", () => markFlashcard("known"));
+$("#shuffle-flashcards").addEventListener("click", shuffleFlashcards);
+$("#close-flashcards").addEventListener("click", closeFlashcards);
+$("#finish-flashcards").addEventListener("click", closeFlashcards);
+$("#retry-flashcards").addEventListener("click", () => {
+  const reviewWords = flashcardState.deck.filter((word) => flashcardState.reviewIds.has(word.id));
+  startFlashcards(reviewWords.length ? reviewWords : flashcardState.deck);
+});
+flashcardDialog.addEventListener("click", (event) => { if (event.target === flashcardDialog) closeFlashcards(); });
 
 initialize();

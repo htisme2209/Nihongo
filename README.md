@@ -14,8 +14,9 @@ Sau đó mở `http://127.0.0.1:4173` trên trình duyệt. Cần chạy qua loc
 
 ## Chế độ luyện
 
+- Flashcard: chọn bài, chạm để lật thẻ, vuốt để chuyển và đánh dấu "Cần ôn" hoặc "Đã nhớ".
 - Hiragana: nhìn nghĩa tiếng Việt và nhập cách đọc.
 - Hán tự: nhìn nghĩa cùng cách đọc và nhập chữ Hán.
 - Hán - Việt: nhìn chữ Hán và nhập âm Hán - Việt.
 
-Từ không có đáp án cho chế độ đang chọn sẽ tự động không xuất hiện trong phiên luyện. Tiến độ được lưu trong `localStorage` của trình duyệt.
+Từ không có đáp án cho chế độ đang chọn sẽ tự động không xuất hiện trong phiên luyện. Tiến độ flashcard và tiến độ làm bài được lưu riêng trong `localStorage` của trình duyệt.
