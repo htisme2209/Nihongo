@@ -1,0 +1,1065 @@
+﻿Bai,STT,Nghia_Tieng_Viet,Dap_An_Tieng_Nhat,Han_Tu,Han_Viet
+1,1,tôi,わたし,私,TƯ
+1,2,"chúng tôi, chúng ta",わたしたち,私たち,TƯ
+1,3,anh/chị/ông/bà,あなた,貴方,QUÝ PHƯƠNG
+1,4,"người kia, người đó",あのひと,あの人,NHÂN
+1,5,vị kia,あのかた,あの方,PHƯƠNG
+1,6,"các anh chị, các ông bà, các bạn, quý vị",みなさん,皆さん,GIAI
+1,7,anh/chị/ông/bà (hậu tố sau tên),～さん,,
+1,8,hậu tố sau tên trẻ em,～ちゃん,,
+1,9,hậu tố sau tên em trai,～くん,～君,QUÂN
+1,10,người nước ~,～じん,～人,NHÂN
+1,11,"thầy, cô",せんせい,先生,TIÊN SINH
+1,12,giáo viên,きょうし,教師,GIÁO SƯ
+1,13,"học sinh, sinh viên",がくせい,学生,HỌC SINH
+1,14,nhân viên công ty,かいしゃいん,会社員,HỘI XÃ VIÊN
+1,15,nhân viên công ty,しゃいん,社員,XÃ VIÊN
+1,16,nhân viên ngân hàng,ぎんこういん,銀行員,NGÂN HÀNH VIÊN
+1,17,bác sĩ,いしゃ,医者,Y GIẢ
+1,18,nhà nghiên cứu,けんきゅうしゃ,研究者,NGHIÊN CỨU GIẢ
+1,19,kỹ sư,エンジニア,,
+1,20,"đại học, trường đại học",だいがく,大学,ĐẠI HỌC
+1,21,bệnh viện,びょういん,病院,BỆNH VIỆN
+1,22,"điện, đèn điện",でんき,電気,ĐIỆN KHÍ
+1,23,"ai, vị nào",だれ／どなた,誰／何方,THÙY / HÀ PHƯƠNG
+1,24,~ tuổi,～さい,～歳,TUẾ
+1,25,"mấy tuổi, bao nhiêu tuổi",なんさい／おいくつ,何歳,HÀ TUẾ
+1,26,"vâng, dạ",はい,,
+1,27,không,いいえ,,
+1,28,"xin lỗi, ...",しつれいですが,失礼ですが,THẤT LỄ
+1,29,Tên anh/chị là gì?,おなまえは？,お名前は？,DANH TIỀN
+1,30,Rất hân hạnh được gặp anh/chị,はじめまして。,初めまして。,SƠ
+1,31,Rất mong được sự giúp đỡ của anh/chị,どうぞよろしく［おねがいします］。,どうぞよろしく［お願いします］。,NGUYỆN
+1,32,Đây là anh/chị/ông/bà ~,こちらは～さんです。,,
+1,33,tôi đến từ ~,～からきました。,～から来ました。,LAI
+1,34,Mỹ,アメリカ,,
+1,35,Anh,イギリス,,
+1,36,Ấn Độ,インド,,
+1,37,Indonesia,インドネシア,,
+1,38,Hàn Quốc,かんこく,韓国,HÀN QUỐC
+1,39,Thái Lan,タイ,,
+1,40,Trung Quốc,ちゅうごく,中国,TRUNG QUỐC
+1,41,Đức,ドイツ,,
+1,42,Nhật Bản,にほん,日本,NHẬT BẢN
+1,43,Pháp,フランス,,
+1,44,Braxin,ブラジル,,
+1,45,Đại học Sakura (giả tưởng),さくらだいがく,さくら大学,ĐẠI HỌC
+1,46,Đại học Phú Sĩ (giả tưởng),ふじだいがく,富士大学,ĐẠI HỌC
+1,47,công ty điện Power,パワーでんき,,
+1,48,tên một tổ chức giả tưởng,ＡＫＣ,,
+1,49,tên một bệnh viện giả tưởng,こうべびょういん,神戸病院,THẦN HỘ BỆNH VIỆN
+2,1,"cái này, đây",これ,,
+2,2,"cái đó, đó",それ,,
+2,3,"cái kia, kia",あれ,,
+2,4,~ này,この～,,
+2,5,~ đó,その～,,
+2,6,~ kia,あの～,,
+2,7,sách,ほん,本,BẢN/BỔN
+2,8,từ điển,じしょ,辞書,TỪ THƯ
+2,9,tạp chí,ざっし,雑誌,TẠP CHÍ
+2,10,báo,しんぶん,新聞,TÂN VĂN
+2,11,vở,ノート,,
+2,12,sổ tay,てちょう,手帳,THỦ TRƯƠNG
+2,13,danh thiếp,めいし,名刺,DANH THÍCH
+2,14,"thẻ, cạc",カード,,
+2,15,thẻ điện thoại,テレホンカード,,
+2,16,bút chì,えんぴつ,鉛筆,DUYÊN BÚT
+2,17,bút bi,ボールペン,,
+2,18,"bút chì kim, bút chì bấm",シャープペンシル,,
+2,19,chìa khóa,かぎ,鍵,KIỆN
+2,20,đồng hồ,とけい,時計,THỜI KẾ
+2,21,"ô, dù",かさ,傘,TẢN
+2,22,"cặp sách, túi sách",かばん,,
+2,23,băng cát-xét,［カセット］テープ,,
+2,24,máy ghi âm,テープレコーダー,,
+2,25,tivi,テレビ,,
+2,26,radio,ラジオ,,
+2,27,máy ảnh,カメラ,,
+2,28,máy vi tính,コンピューター,,
+2,29,"ô tô, xe hơi",じどうしゃ,自動車,TỰ ĐỘNG XA
+2,30,cái bàn,つくえ,机,CƠ
+2,31,cái ghế,いす,,
+2,32,sô-cô-la,チョコレート,,
+2,33,cà phê,コーヒー,,
+2,34,tiếng Anh,えいご,英語,ANH NGỮ
+2,35,tiếng Nhật,にほんご,日本語,NHẬT BẢN NGỮ
+2,36,cái gì,なに,,
+2,37,cái gì,なん,何,HÀ
+2,38,đúng rồi,そう,,
+2,39,"không phải, không đúng, sai rồi",ちがいます,違います,VI
+2,40,"thế à, vậy à",そうですか,,
+2,41,"à, ờ",あのう,,
+2,42,chỉ là chút lòng thành thôi,ほんのきもちです,ほんの気持ち,KHÍ TRÌ
+2,43,xin mời,どうぞ,,
+2,44,cảm ơn,どうも,,
+2,45,xin chân thành cảm ơn,どうもありがとうございます,,
+2,46,từ nay tôi rất mong sự giúp đỡ của anh/chị,これからおせわになります,これからお世話になります,THẾ THOẠI
+2,47,chính tôi mới phải xin anh/chị giúp đỡ,こちらこそよろしく,,
+3,1,"chỗ này, đây",ここ,,
+3,2,"chỗ đó, đó",そこ,,
+3,3,"chỗ kia, kia",あそこ,,
+3,4,"chỗ nào, đâu",どこ,,
+3,5,"phía này, đằng này, chỗ này, đây",こちら,,
+3,6,"phía đó, đằng đó, chỗ đó, đó",そちら,,
+3,7,"phía kia, đằng kia, chỗ kia, kia",あちら,,
+3,8,"phía nào, đằng nào, chỗ nào, đâu",どちら,,
+3,9,"lớp học, phòng học",きょうしつ,教室,GIÁO THẤT
+3,10,nhà ăn,しょくどう,食堂,THỰC ĐƯỜNG
+3,11,văn phòng,じむしょ,事務所,SỰ VỤ SỞ
+3,12,phòng họp,かいぎしつ,会議室,HỘI NGHỊ THẤT
+3,13,"bộ phận tiếp tân, phòng thường trực",うけつけ,受付,THỤ PHÓ
+3,14,"hành lang, đại sảnh",ロビー,,
+3,15,căn phòng,へや,部屋,BỘ ỐC
+3,16,"nhà vệ sinh, phòng vệ sinh, toa-lét",トイレ（おてあらい）,トイレ（お手洗い）,THỦ TẨY
+3,17,cầu thang,かいだん,階段,GIAI ĐOẠN
+3,18,thang máy,エレベーター,,
+3,19,thang cuốn,エスカレーター,,
+3,20,đất nước của anh/chị,［お］くに,［お］国,QUỐC
+3,21,công ty,かいしゃ,会社,HỘI XÃ
+3,22,nhà,うち,家,GIA
+3,23,"máy điện thoại, điện thoại",でんわ,電話,ĐIỆN THOẠI
+3,24,giày,くつ,靴,NGOA
+3,25,cà vạt,ネクタイ,,
+3,26,rượu vang,ワイン,,
+3,27,thuốc lá,たばこ,煙草,YÊN THẢO
+3,28,quầy bán,うりば,売り場,MẠI TRƯỜNG
+3,29,"tầng hầm, dưới mặt đất",ちか,地下,ĐỊA HẠ
+3,30,tầng thứ ~,～かい（～がい）,～階,GIAI
+3,31,tầng mấy,なんがい,何階,HÀ GIAI
+3,32,~ yên,～えん,～円,VIÊN
+3,33,bao nhiêu tiền,いくら,,
+3,34,trăm,ひゃく,百,BÁCH
+3,35,nghìn,せん,千,THIÊN
+3,36,"mười nghìn, vạn",まん,万,VẠN
+3,37,xin lỗi,すみません,,
+3,38,cách nói lịch sự của 'là',～でございます,,
+3,39,cho tôi xem ~,［～を］みせてください,［～を］見せてください,KIẾN
+3,40,"thế thì, vậy thì",じゃ,,
+3,41,cho tôi ~,［～を］ください,,
+3,42,tên một nhà ga ở Osaka,しんおおさか,新大阪,TÂN ĐẠI PHẢN
+3,43,Ý,イタリア,,
+3,44,Thụy Sĩ,スイス,,
+3,45,tên các công ty giả tưởng,ＭＴ／ヨーネン／アキックス,,
+4,1,"dậy, thức dậy",おきます,起きます,KHỞI
+4,2,"ngủ, đi ngủ",ねます,寝ます,TẨM
+4,3,làm việc,はたらきます,働きます,ĐỘNG
+4,4,"nghỉ, nghỉ ngơi",やすみます,休みます,HƯU
+4,5,học,べんきょうします,勉強します,MIỄN CƯỜNG
+4,6,"hết, kết thúc, xong",おわります,終わります,CHUNG
+4,7,bách hóa,デパート,,
+4,8,ngân hàng,ぎんこう,銀行,NGÂN HÀNH
+4,9,bưu điện,ゆうびんきょく,郵便局,BƯU TIỆN CỤC
+4,10,thư viện,としょかん,図書館,ĐỒ THƯ QUÁN
+4,11,bảo tàng mỹ thuật,びじゅつかん,美術館,MỸ THUẬT QUÁN
+4,12,bây giờ,いま,今,KIM
+4,13,~ giờ,～じ,～時,THỜI
+4,14,~ phút,～ふん（～ぷん）,～分,PHÂN
+4,15,"rưỡi, nửa",はん,半,BÁN
+4,16,mấy giờ,なんじ,何時,HÀ THỜI
+4,17,mấy phút,なんぷん,何分,HÀ PHÂN
+4,18,"sáng, trước 12 giờ trưa",ごぜん,午前,NGỌ TIỀN
+4,19,"chiều, sau 12 giờ trưa",ごご,午後,NGỌ HẬU
+4,20,"buổi sáng, sáng",あさ,朝,TRIỀU
+4,21,"buổi trưa, trưa",ひる,昼,TRÚ
+4,22,"buổi tối, tối",ばん（よる）,晩（夜）,VÃN DẠ
+4,23,hôm kia,おととい,一昨日,NHẤT TẠC NHẬT
+4,24,hôm qua,きのう,昨日,TẠC NHẬT
+4,25,hôm nay,きょう,今日,KIM NHẬT
+4,26,ngày mai,あした,明日,MINH NHẬT
+4,27,ngày kia,あさって,明後日,MINH HẬU NHẬT
+4,28,sáng nay,けさ,今朝,KIM TRIỀU
+4,29,tối nay,こんばん,今晩,KIM VÃN
+4,30,"nghỉ, nghỉ phép, ngày nghỉ",やすみ,休み,HƯU
+4,31,nghỉ trưa,ひるやすみ,昼休み,TRÚ HƯU
+4,32,"hàng sáng, mỗi sáng",まいあさ,毎朝,MỖI TRIỀU
+4,33,"hàng tối, mỗi tối",まいばん,毎晩,MỖI VÃN
+4,34,"hàng ngày, mỗi ngày",まいにち,毎日,MỖI NHẬT
+4,35,thứ hai,げつようび,月曜日,DIỆU NHẬT
+4,36,thứ ba,かようび,火曜日,DIỆU NHẬT
+4,37,thứ tư,すいようび,水曜日,DIỆU NHẬT
+4,38,thứ năm,もくようび,木曜日,DIỆU NHẬT
+4,39,thứ sáu,きんようび,金曜日,DIỆU NHẬT
+4,40,thứ bảy,どようび,土曜日,DIỆU NHẬT
+4,41,chủ nhật,にちようび,日曜日,DIỆU NHẬT
+4,42,thứ mấy,なんようび,何曜日,DIỆU NHẬT
+4,43,số,ばんごう,番号,PHIÊN HIỆU
+4,44,"số bao nhiêu, số mấy",なんばん,何番,HÀ PHIÊN
+4,45,~ từ,～から,,
+4,46,~ đến,～まで,,
+4,47,~ và,～と～,,
+4,48,"phía đó, đằng đó, chỗ đó, đó",そちら,,
+4,49,Anh/chị vất vả quá,たいへんですね,大変ですね,ĐẠI BIẾN
+4,50,"ừ, à",えーと,,
+4,51,số điện thoại dịch vụ hướng dẫn số điện thoại,１０４,,
+4,52,"Nhờ anh/chị, xin vui lòng giúp đỡ",おねがいします,お願いします,NGUYỆN
+4,53,"Tôi hiểu rồi ạ, vâng được rồi ạ",かしこまりました,,
+4,54,số điện thoại mà ông/bà muốn hỏi,おといあわせのばんごう,お問い合わせの番号,PHIÊN HIỆU
+4,55,Xin cảm ơn ông/bà,どうもありがとうございました,,
+4,56,New York,ニューヨーク,,
+4,57,Bắc Kinh,ペキン,北京,BẮC KINH
+4,58,Luân Đôn,ロンドン,,
+4,59,Băng Cốc,バンコク,,
+4,60,Los Angeles,ロサンゼルス,,
+4,61,tên một bảo tàng mỹ thuật giả tưởng,やまとびじゅつかん,大和美術館,MỸ THUẬT QUÁN
+4,62,tên một bách hóa giả tưởng,あさひデパート,朝日デパート,TRIỀU NHẬT
+4,63,tên một thư viện giả tưởng,みどりとしょかん,緑図書館,ĐỒ THƯ QUÁN
+4,64,tên một ngân hàng giả tưởng,アップルぎんこう,アップル銀行,NGÂN HÀNH
+5,1,đi,いきます,行きます,HÀNH
+5,2,đến,きます,来ます,LAI
+5,3,về,かえります,帰ります,QUY
+5,4,trường học,がっこう,学校,HỌC HIỆU
+5,5,siêu thị,スーパー,,
+5,6,"ga, nhà ga",えき,駅,DỊCH
+5,7,máy bay,ひこうき,飛行機,PHI HÀNH CƠ
+5,8,"thuyền, tàu thủy",ふね,船,THUYỀN
+5,9,tàu điện,でんしゃ,電車,ĐIỆN XA
+5,10,tàu điện ngầm,ちかてつ,地下鉄,ĐỊA HẠ THIẾT
+5,11,tàu Shinkansen,しんかんせん,新幹線,TÂN CÁN TUYẾN
+5,12,xe buýt,バス,,
+5,13,tắc-xi,タクシー,,
+5,14,xe đạp,じてんしゃ,自転車,TỰ CHUYỂN XA
+5,15,đi bộ,あるいて,歩いて,BỘ
+5,16,người,ひと,人,NHÂN
+5,17,"bạn, bạn bè",ともだち,友達,HỮU ĐẠT
+5,18,"anh ấy, bạn trai",かれ,彼,BỈ
+5,19,"chị ấy, bạn gái",かのじょ,彼女,BỈ NỮ
+5,20,gia đình,かぞく,家族,GIA TỘC
+5,21,một mình,ひとりで,一人で,NHẤT NHÂN
+5,22,tuần trước,せんしゅう,先週,TIÊN CHU
+5,23,tuần này,こんしゅう,今週,KIM CHU
+5,24,tuần sau,らいしゅう,来週,LAI CHU
+5,25,tháng này,こんげつ,今月,KIM NGUYỆT
+5,26,tháng sau,らいげつ,来月,LAI NGUYỆT
+5,27,năm ngoái,きょねん,去年,KHỨ NIÊN
+5,28,năm nay,ことし,今年,KIM NIÊN
+5,29,năm sau,らいねん,来年,LAI NIÊN
+5,30,tháng ~,～がつ,～月,NGUYỆT
+5,31,tháng mấy,なんがつ,何月,HÀ NGUYỆT
+5,32,ngày mồng 1,ついたち,一日,NHẤT NHẬT
+5,33,"ngày mồng 2, 2 ngày",ふつか,二日,NHỊ NHẬT
+5,34,"ngày mồng 3, 3 ngày",みっか,三日,TAM NHẬT
+5,35,"ngày mồng 4, 4 ngày",よっか,四日,TỨ NHẬT
+5,36,"ngày mồng 5, 5 ngày",いつか,五日,NGŨ NHẬT
+5,37,"ngày mồng 6, 6 ngày",むいか,六日,LỤC NHẬT
+5,38,"ngày mồng 7, 7 ngày",なのか,七日,THẤT NHẬT
+5,39,"ngày mồng 8, 8 ngày",ようか,八日,BÁT NHẬT
+5,40,"ngày mồng 9, 9 ngày",ここのか,九日,CỬU NHẬT
+5,41,"ngày mồng 10, 10 ngày",とおか,十日,THẬP NHẬT
+5,42,"ngày 14, 14 ngày",じゅうよっか,十四日,THẬP TỨ NHẬT
+5,43,"ngày 20, 20 ngày",はつか,二十日,NHỊ THẬP NHẬT
+5,44,"ngày 24, 24 ngày",にじゅうよっか,二十四日,NHỊ THẬP TỨ NHẬT
+5,45,"ngày ~, ~ ngày",～にち,～日,NHẬT
+5,46,"ngày mấy, ngày bao nhiêu, mấy ngày, bao nhiêu ngày",なんにち,何日,HÀ NHẬT
+5,47,"bao giờ, khi nào",いつ,,
+5,48,sinh nhật,たんじょうび,誕生日,ĐẢN SINH NHẬT
+5,49,tàu thường,ふつう,普通,PHỔ THÔNG
+5,50,tàu tốc hành,きゅうこう,急行,CẤP HÀNH
+5,51,tàu tốc hành đặc biệt,とっきゅう,特急,ĐẶC CẤP
+5,52,tiếp theo,つぎの,次の,THỨ
+5,53,Không có gì,どういたしまして,,
+5,54,sân ga số ~,～ばんせん,～番線,PHIÊN TUYẾN
+5,55,tên một khu phố ở Kyushu,はかた,博多,BÁC ĐA
+5,56,tên một khu phố ở Kyoto,ふしみ,伏見,PHỤC KIẾN
+5,57,tên một khu phố ở Osaka,こうしえん,甲子園,GIÁP TỬ VIÊN
+5,58,Lâu đài Osaka,おおさかじょう,大阪城,ĐẠI PHẢN THÀNH
+6,1,ăn,たべます,食べます,THỰC
+6,2,uống,のみます,飲みます,ẨM
+6,3,hút thuốc lá,すいます,吸います,HẤP
+6,4,"xem, nhìn, trông",みます,見ます,KIẾN
+6,5,nghe,ききます,聞きます,VĂN
+6,6,đọc,よみます,読みます,ĐỘC
+6,7,"viết, vẽ",かきます,書きます,THƯ
+6,8,mua,かいます,買います,MÃI
+6,9,chụp ảnh,とります,撮ります,TOÁT
+6,10,làm,します,,
+6,11,gặp bạn,あいます,会います,HỘI
+6,12,"cơm, bữa ăn",ごはん,ご飯,PHẠN
+6,13,cơm sáng,あさごはん,朝ご飯,TRIỀU PHẠN
+6,14,cơm trưa,ひるごはん,昼ご飯,TRÚ PHẠN
+6,15,cơm tối,ばんごはん,晩ご飯,VÃN PHẠN
+6,16,bánh mì,パン,,
+6,17,trứng,たまご,卵,NOÃN
+6,18,thịt,にく,肉,NHỤC
+6,19,cá,さかな,魚,NGƯ
+6,20,rau,やさい,野菜,DÃ THÁI
+6,21,"hoa quả, trái cây",くだもの,果物,QUẢ VẬT
+6,22,nước,みず,水,THỦY
+6,23,trà,おちゃ,お茶,TRÀ
+6,24,trà đen,こうちゃ,紅茶,HỒNG TRÀ
+6,25,sữa bò,ぎゅうにゅう,牛乳,NGƯU NHŨ
+6,26,sữa,ミルク,,
+6,27,nước hoa quả,ジュース,,
+6,28,bia,ビール,,
+6,29,"rượu, rượu sake",［お］さけ,［お］酒,TỬU
+6,30,"video, băng video, đầu video",ビデオ,,
+6,31,"phim, điện ảnh",えいが,映画,ÁNH HỌA
+6,32,đĩa CD,ＣＤ,,
+6,33,thư,てがみ,手紙,THỦ CHỈ
+6,34,báo cáo,レポート,,
+6,35,ảnh,しゃしん,写真,TẢ CHÂN
+6,36,"cửa hàng, tiệm",みせ,店,ĐIẾM
+6,37,nhà hàng,レストラン,,
+6,38,vườn,にわ,庭,ĐÌNH
+6,39,bài tập về nhà,しゅくだい,宿題,TÚC ĐỀ
+6,40,quần vợt,テニス,,
+6,41,bóng đá,サッカー,,
+6,42,việc ngắm hoa anh đào,［お］はなみ,［お］花見,HOA KIẾN
+6,43,cái gì,なに,何,HÀ
+6,44,"cùng, cùng nhau",いっしょに,一緒に,NHẤT TỰ
+6,45,một chút,ちょっと,,
+6,46,"luôn luôn, lúc nào cũng",いつも,,
+6,47,thỉnh thoảng,ときどき,時々,THỜI
+6,48,"sau đó, tiếp theo",それから,,
+6,49,"vâng, được",ええ,,
+6,50,"Được đấy nhỉ, hay quá",いいですね,,
+6,51,"Tôi hiểu rồi, vâng ạ",わかりました,分かりました,PHÂN
+6,52,"Có gì đấy ạ, cái gì vậy?",なんですか,何ですか,HÀ
+6,53,Hẹn gặp lại ngày mai,じゃ、またあした,じゃ、また明日,MINH NHẬT
+6,54,Mexico,メキシコ,,
+6,55,Công viên lâu đài Osaka,おおさかじょうこうえん,大阪城公園,ĐẠI PHẢN THÀNH
+7,1,cắt,きります,切ります,THIẾT
+7,2,gửi,おくります,送ります,TỐNG
+7,3,"cho, tặng",あげます,上げます,THƯỢNG
+7,4,nhận,もらいます,貰います,LA
+7,5,"cho mượn, cho vay",かします,貸します,THẢI
+7,6,"mượn, vay",かります,借ります,TÁ
+7,7,dạy,おしえます,教えます,GIÁO
+7,8,"học, tập",ならいます,習います,TẬP
+7,9,gọi điện thoại,かけます,電話をかけます,ĐIỆN THOẠI
+7,10,tay,て,手,THỦ
+7,11,đũa,はし,箸,TRỢ
+7,12,thìa,スプーン,,
+7,13,dao,ナイフ,,
+7,14,nĩa,フォーク,,
+7,15,kéo,はさみ,鋏,KIẾP
+7,16,fax,ファクス,,
+7,17,máy đánh chữ,ワープロ,,
+7,18,máy vi tính cá nhân,パソコン,,
+7,19,cái đục lỗ,パンチ,,
+7,20,cái dập ghim,ホッチキス,,
+7,21,băng dính,セロテープ,,
+7,22,cái tẩy,けしゴム,消しゴム,TIÊU
+7,23,giấy,かみ,紙,CHỈ
+7,24,hoa,はな,花,HOA
+7,25,áo sơ mi,シャツ,,
+7,26,"quà tặng, tặng phẩm",プレゼント,,
+7,27,"đồ đạc, hành lý",にもつ,荷物,HÀ VẬT
+7,28,tiền,おかね,お金,KIM
+7,29,vé,きっぷ,切符,THIẾT PHÙ
+7,30,Giáng sinh,クリスマス,,
+7,31,bố của mình,ちち,父,PHỤ
+7,32,mẹ của mình,はは,母,MẪU
+7,33,bố của người khác / dùng để gọi bố mình,おとうさん,お父さん,PHỤ
+7,34,mẹ của người khác / dùng để gọi mẹ mình,おかあさん,お母さん,MẪU
+7,35,"đã, rồi",もう,,
+7,36,chưa,まだ,,
+7,37,"từ bây giờ, sau đây",これから,,
+7,38,"Hay nhỉ, đẹp nhỉ",すてきですね,素敵ですね,TỐ ĐỊCH
+7,39,"Xin lỗi, có ai ở nhà không?",ごめんください,ご免ください,MIỄN
+7,40,Chào mừng anh/chị đã đến chơi,いらっしゃい,,
+7,41,Mời anh/chị vào,どうぞおあがりください,どうぞお上がりください,THƯỢNG
+7,42,Xin thất lễ,しつれいします,失礼します,THẤT LỄ
+7,43,Anh/chị dùng ~ có được không?,［～は］いかがですか,,
+7,44,Xin nhận / mời dùng trước khi ăn uống,いただきます,,
+7,45,"du lịch, chuyến du lịch",りょこう,旅行,LỮ HÀNH
+7,46,quà,おみやげ,お土産,THỔ SẢN
+7,47,Châu Âu,ヨーロッパ,,
+7,48,Tây Ban Nha,スペイン,,
+8,1,đẹp trai,ハンサム［な］,,
+8,2,"đẹp, sạch",きれい［な］,綺麗［な］,Ỷ LỆ
+8,3,yên tĩnh,しずか［な］,静か［な］,TĨNH
+8,4,náo nhiệt,にぎやか［な］,賑やか［な］,CHẨN
+8,5,nổi tiếng,ゆうめい［な］,有名［な］,HỮU DANH
+8,6,"tốt bụng, thân thiện",しんせつ［な］,親切［な］,THÂN THIẾT
+8,7,khỏe,げんき［な］,元気［な］,NGUYÊN KHÍ
+8,8,rảnh rỗi,ひま［な］,暇［な］,HẠ
+8,9,tiện lợi,べんり［な］,便利［な］,TIỆN LỢI
+8,10,"đẹp, hay",すてき［な］,素敵［な］,TỐ ĐỊCH
+8,11,"lớn, to",おおきい,大きい,ĐẠI
+8,12,"bé, nhỏ",ちいさい,小さい,TIỂU
+8,13,mới,あたらしい,新しい,TÂN
+8,14,cũ,ふるい,古い,CỔ
+8,15,tốt,いい,良い,LƯƠNG
+8,16,xấu,わるい,悪い,ÁC
+8,17,nóng,あつい,暑い,THỬ
+8,18,"lạnh, rét",さむい,寒い,HÀN
+8,19,"lạnh, buốt",つめたい,冷たい,LÃNH
+8,20,khó,むずかしい,難しい,NAN
+8,21,dễ,やさしい,易しい,DỊ
+8,22,"đắt, cao",たかい,高い,CAO
+8,23,rẻ,やすい,安い,AN
+8,24,thấp,ひくい,低い,ĐÊ
+8,25,"thú vị, hay",おもしろい,面白い,DIỆN BẠCH
+8,26,ngon,おいしい,美味しい,MỸ VỊ
+8,27,bận,いそがしい,忙しい,MANG
+8,28,vui,たのしい,楽しい,LẠC
+8,29,trắng,しろい,白い,BẠCH
+8,30,đen,くろい,黒い,HẮC
+8,31,đỏ,あかい,赤い,XÍCH
+8,32,xanh da trời,あおい,青い,THANH
+8,33,anh đào,さくら,桜,ANH
+8,34,núi,やま,山,SƠN
+8,35,"thị trấn, thị xã, thành phố",まち,町,ĐINH
+8,36,đồ ăn,たべもの,食べ物,THỰC VẬT
+8,37,xe ô tô,くるま,車,XA
+8,38,"nơi, chỗ",ところ,所,SỞ
+8,39,kí túc xá,りょう,寮,LIÊU
+8,40,học,べんきょう,勉強,MIỄN CƯỜNG
+8,41,"cuộc sống, sinh hoạt",せいかつ,生活,SINH HOẠT
+8,42,công việc,［お］しごと,［お］仕事,SĨ SỰ
+8,43,thế nào,どう,,
+8,44,~ như thế nào,どんな～,,
+8,45,cái nào,どれ,,
+8,46,"rất, lắm",とても,,
+8,47,không ~ lắm,あまり,,
+8,48,"và, thêm nữa",そして,,
+8,49,"~, nhưng ~",～が、～,,
+8,50,Anh/chị có khỏe không?,おげんきですか,お元気ですか,NGUYÊN KHÍ
+8,51,"Thế à, như vậy nhỉ",そうですね,,
+8,52,Anh/chị đã quen với cuộc sống ở Nhật chưa?,にほんのせいかつになれましたか,日本の生活に慣れましたか,NHẬT BẢN SINH HOẠT
+8,53,Anh/chị dùng thêm một chén ~ nữa được không?,［～、］もういっぱい いかがですか,［～、］もう一杯いかがですか,NHẤT BÔI
+8,54,"Không, đủ rồi ạ",いいえ、けっこうです,いいえ、結構です,KẾT CẤU
+8,55,Đã ~ rồi nhỉ,もう～です［ね］,,
+8,56,Sắp đến lúc tôi phải xin phép rồi,そろそろしつれいします,そろそろ失礼します,THẤT LỄ
+8,57,Lần sau anh/chị lại đến chơi nhé,またいらっしゃってください,,
+8,58,Núi Phú Sĩ,ふじさん,富士山,PHÚ SĨ SƠN
+8,59,Hồ Biwa,びわこ,琵琶湖,TỲ BÀ HỒ
+8,60,Thượng Hải,シャンハイ,上海,THƯỢNG HẢI
+8,61,Bảy chàng võ sĩ Samurai,しちにんのさむらい,七人の侍,THẤT NHÂN THỊ
+8,62,Chùa Kinkaku-ji,きんかくじ,金閣寺,KIM CÁC TỰ
+9,1,"hiểu, nắm được",わかります,分かります,PHÂN
+9,2,"có, sở hữu",あります,,
+9,3,thích,すき［な］,好き［な］,HẢO
+9,4,"ghét, không thích",きらい［な］,嫌い［な］,HIỀM
+9,5,"giỏi, khéo",じょうず［な］,上手［な］,THƯỢNG THỦ
+9,6,kém,へた［な］,下手［な］,HẠ THỦ
+9,7,"món ăn, việc nấu ăn",りょうり,料理,LIỆU LÝ
+9,8,đồ uống,のみもの,飲み物,ẨM VẬT
+9,9,thể thao,スポーツ,,
+9,10,bóng chày,やきゅう,野球,DÃ CẦU
+9,11,"nhảy, khiêu vũ",ダンス,,
+9,12,âm nhạc,おんがく,音楽,ÂM NHẠC
+9,13,bài hát,うた,歌,CA
+9,14,nhạc cổ điển,クラシック,,
+9,15,nhạc jazz,ジャズ,,
+9,16,buổi hòa nhạc,コンサート,,
+9,17,karaoke,カラオケ,,
+9,18,Kabuki,かぶき,歌舞伎,CA VŨ KỸ
+9,19,"tranh, hội họa",え,絵,HỘI
+9,20,chữ,じ,字,TỰ
+9,21,chữ Hán,かんじ,漢字,HÁN TỰ
+9,22,chữ Hiragana,ひらがな,平仮名,BÌNH GIẢ DANH
+9,23,chữ Katakana,かたかな,片仮名,PHIẾN GIẢ DANH
+9,24,chữ La Mã,ローマじ,ローマ字,TỰ
+9,25,tiền lẻ,こまかいおかね,細かいお金,TẾ KIM
+9,26,"vé xem hòa nhạc, xem phim",チケット,,
+9,27,thời gian,じかん,時間,THỜI GIAN
+9,28,"việc bận, công chuyện",ようじ,用事,DỤNG SỰ
+9,29,"cuộc hẹn, lời hứa",やくそく,約束,ƯỚC THÚC
+9,30,chồng của người khác,ごしゅじん,ご主人,CHỦ NHÂN
+9,31,chồng của mình,おっと／しゅじん,夫／主人,PHU / CHỦ NHÂN
+9,32,vợ của người khác,おくさん,奥さん,ÁO
+9,33,vợ của mình,つま／かない,妻／家内,THÊ / GIA NỘI
+9,34,con cái,こども,子供,TỬ CUNG
+9,35,"tốt, rõ",よく,,
+9,36,"đại khái, đại thể",だいたい,大体,ĐẠI THỂ
+9,37,nhiều,たくさん,沢山,TRẠCH SƠN
+9,38,"ít, một ít",すこし,少し,THIỂU
+9,39,hoàn toàn không,ぜんぜん,全然,TOÀN NHIÊN
+9,40,"sớm, nhanh",はやく,早く,TẢO
+9,41,~ từ,～から,,
+9,42,tại sao,どうして,,
+9,43,"Thật đáng tiếc nhỉ, buồn nhỉ",ざんねんですね,残念ですね,TÀN NIỆM
+9,44,Xin lỗi,すみません,,
+9,45,a-lô,もしもし,,
+9,46,"a, à",ああ,,
+9,47,Anh/chị cùng ~ với chúng tôi được không?,いっしょにいかがですか,一緒にいかがですか,NHẤT TỰ
+9,48,~ thì có lẽ không được rồi,［～は］ちょっと…,,
+9,49,Không được à?,だめですか,駄目ですか,ĐÀ MỤC
+9,50,Hẹn anh/chị lần sau vậy,またこんどおねがいします,また今度お願いします,KIM ĐỘ
+9,51,Ozawa Seiji,おざわせいじ,小澤征爾,TIỂU TRẠCH CHINH NHĨ
+10,1,"có, ở",います,,
+10,2,có,あります,,
+10,3,"nhiều, đa dạng",いろいろ［な］,色々［な］,SẮC SẮC
+10,4,người đàn ông,おとこのひと,男の人,NAM NHÂN
+10,5,người đàn bà,おんなのひと,女の人,NỮ NHÂN
+10,6,cậu con trai,おとこのこ,男の子,NAM TỬ
+10,7,cô con gái,おんなのこ,女の子,NỮ TỬ
+10,8,chó,いぬ,犬,KHUYỂN
+10,9,mèo,ねこ,猫,MIÊU
+10,10,"cây, gỗ",き,木,MỘC
+10,11,"vật, đồ vật",もの,物,VẬT
+10,12,phim,フィルム,,
+10,13,pin,でんち,電池,ĐIỆN TRÌ
+10,14,hộp,はこ,箱,TƯƠNG
+10,15,công tắc,スイッチ,,
+10,16,tủ lạnh,れいぞうこ,冷蔵庫,LÃNH TÀNG KHỐ
+10,17,bàn,テーブル,,
+10,18,giường,ベッド,,
+10,19,giá sách,たな,棚,BẰNG
+10,20,cửa,ドア,,
+10,21,cửa sổ,まど,窓,SONG
+10,22,"hộp thư, hòm thư",ポスト,,
+10,23,tòa nhà,ビル,,
+10,24,công viên,こうえん,公園,CÔNG VIÊN
+10,25,"quán giải khát, quán cà phê",きっさてん,喫茶店,KHÁCH TRÀ ĐIẾM
+10,26,hiệu sách,ほんや,本屋,BẢN ỐC
+10,27,"hiệu ~, cửa hàng ~",～や,～屋,ỐC
+10,28,"bến xe, điểm lên xuống xe",のりば,乗り場,THỪA TRƯỜNG
+10,29,tỉnh,けん,県,HUYỆN
+10,30,trên,うえ,上,THƯỢNG
+10,31,dưới,した,下,HẠ
+10,32,trước,まえ,前,TIỀN
+10,33,sau,うしろ,後ろ,HẬU
+10,34,phải,みぎ,右,HỮU
+10,35,trái,ひだり,左,TẢ
+10,36,"trong, giữa",なか,中,TRUNG
+10,37,ngoài,そと,外,NGOẠI
+10,38,bên cạnh,となり,隣,LÂN
+10,39,gần,ちかく,近く,CẬN
+10,40,giữa,あいだ,間,GIAN
+10,41,"~ và ~, v.v.",～や～［など］,,
+10,42,~ nhất,いちばん～,一番～,NHẤT PHIÊN
+10,43,"giá thứ ~, tầng thứ ~",～だんめ,～段目,ĐOẠN MỤC
+10,44,Cảm ơn,［どうも］すみません,,
+10,45,tương ớt,チリソース,,
+10,46,bên trong cùng,おく,奥,ÁO
+10,47,góc gia vị,スパイス・コーナー,,
+10,48,Công viên Tokyo Disneyland,とうきょうディズニーランド,東京ディズニーランド,ĐÔNG KINH
+10,49,tên một siêu thị giả tưởng,ユニューヤ・ストア,,
+11,1,có con,［こどもが～］います,［子供が～］います,TỬ CUNG
+11,2,ở Nhật,［にほんに～］います,［日本に～］います,NHẬT BẢN
+11,3,"mất, tốn",かかります,,
+11,4,nghỉ làm việc,［かいしゃを～］やすみます,［会社を～］休みます,HỘI XÃ
+11,5,một cái,ひとつ,一つ,NHẤT
+11,6,hai cái,ふたつ,二つ,NHỊ
+11,7,ba cái,みっつ,三つ,TAM
+11,8,bốn cái,よっつ,四つ,TỨ
+11,9,năm cái,いつつ,五つ,NGŨ
+11,10,sáu cái,むっつ,六つ,LỤC
+11,11,bảy cái,ななつ,七つ,THẤT
+11,12,tám cái,やっつ,八つ,BÁT
+11,13,chín cái,ここのつ,九つ,CỬU
+11,14,mười cái,とお,十,THẬP
+11,15,"mấy cái, bao nhiêu cái",いくつ,,
+11,16,một người,ひとり,一人,NHẤT NHÂN
+11,17,hai người,ふたり,二人,NHỊ NHÂN
+11,18,~ người,～にん,～人,NHÂN
+11,19,"~ cái dùng để đếm máy móc, xe cộ",～だい,～台,ĐÀI
+11,20,"~ tờ, tấm",～まい,～枚,MAI
+11,21,~ lần,～かい,～回,HỒI
+11,22,táo,りんご,,
+11,23,quýt,みかん,,
+11,24,bánh sandwich,サンドイッチ,,
+11,25,món cơm cà ri,カレー［ライス］,,
+11,26,kem,アイスクリーム,,
+11,27,tem,きって,切手,THIẾT THỦ
+11,28,bưu thiếp,はがき,葉書,DIỆP THƯ
+11,29,phong bì,ふうとう,封筒,PHONG ĐỒNG
+11,30,bưu phẩm gửi nhanh,そくたつ,速達,TỐC ĐẠT
+11,31,bưu phẩm gửi bảo đảm,かきとめ,書留,THƯ LƯU
+11,32,thư chuyển bằng đường hàng không,エアメール,,
+11,33,gửi bằng đường hàng không,こうくうびん,航空便,HÀNG KHÔNG TIỆN
+11,34,gửi bằng đường biển,ふなびん,船便,THUYỀN TIỆN
+11,35,bố mẹ,りょうしん,両親,LƯỠNG THÂN
+11,36,anh chị em,きょうだい,兄弟,HUYNH ĐỆ
+11,37,anh trai,あに,兄,HUYNH
+11,38,anh trai của người khác,おにいさん,お兄さん,HUYNH
+11,39,chị gái,あね,姉,TỶ
+11,40,chị gái của người khác,おねえさん,お姉さん,TỶ
+11,41,em trai,おとうと,弟,ĐỆ
+11,42,em trai của người khác,おとうとさん,弟さん,ĐỆ
+11,43,em gái,いもうと,妹,MUỘI
+11,44,em gái của người khác,いもうとさん,妹さん,MUỘI
+11,45,nước ngoài,がいこく,外国,NGOẠI QUỐC
+11,46,~ tiếng,～じかん,～時間,THỜI GIAN
+11,47,~ tuần,～しゅうかん,～週間,CHU GIAN
+11,48,~ tháng,～かげつ,～か月,NGUYỆT
+11,49,~ năm,～ねん,～年,NIÊN
+11,50,khoảng ~,～ぐらい,,
+11,51,bao lâu,どのくらい,,
+11,52,tổng cộng,ぜんぶで,全部で,TOÀN BỘ
+11,53,tất cả,みんな,皆,GIAI
+11,54,chỉ ~,～だけ,,
+11,55,"Xin mời vào, xin chào quý khách",いらっしゃいませ。,,
+11,56,Trời đẹp nhỉ,いい［お］てんきですね。,いい［お］天気ですね。,THIÊN KHÍ
+11,57,Anh/chị đi ra ngoài đấy à?,おでかけですか。,お出かけですか。,XUẤT
+11,58,Tôi đi ~ một chút,ちょっと～まで。,,
+11,59,Anh/chị đi nhé,いっていらっしゃい。,行っていらっしゃい。,HÀNH
+11,60,Tôi đi đây,いってまいります。,行ってまいります。,HÀNH
+11,61,"sau đó, tiếp theo",それから,,
+11,62,Úc,オーストラリア,,
+12,1,"đơn giản, dễ",かんたん［な］,簡単［な］,GIẢN ĐƠN
+12,2,gần,ちかい,近い,CẬN
+12,3,xa,とおい,遠い,VIỄN
+12,4,"nhanh, sớm",はやい,速い／早い,TỐC / TẢO
+12,5,"chậm, muộn",おそい,遅い,TRÌ
+12,6,nhiều người,［ひとが～］おおい,［人が～］多い,ĐA
+12,7,ít người,［ひとが～］すくない,［人が～］少ない,THIỂU
+12,8,ấm,あたたかい,温かい／暖かい,ÔN / NOÃN
+12,9,mát,すずしい,涼しい,LƯƠNG
+12,10,ngọt,あまい,甘い,CAM
+12,11,cay,からい,辛い,TÂN
+12,12,nặng,おもい,重い,TRỌNG
+12,13,nhẹ,かるい,軽い,KHINH
+12,14,"thích, chọn, dùng",［コーヒーが～］いい,,
+12,15,mùa,きせつ,季節,QUÝ TIẾT
+12,16,mùa xuân,はる,春,XUÂN
+12,17,mùa hè,なつ,夏,HẠ
+12,18,mùa thu,あき,秋,THU
+12,19,mùa đông,ふゆ,冬,ĐÔNG
+12,20,thời tiết,てんき,天気,THIÊN KHÍ
+12,21,mưa,あめ,雨,VŨ
+12,22,tuyết,ゆき,雪,TUYẾT
+12,23,có mây,くもり,曇り,ĐÀM
+12,24,khách sạn,ホテル,,
+12,25,sân bay,くうこう,空港,KHÔNG CẢNG
+12,26,"biển, đại dương",うみ,海,HẢI
+12,27,thế giới,せかい,世界,THẾ GIỚI
+12,28,tiệc,パーティー,,
+12,29,lễ hội,［お］まつり,［お］祭り,TẾ
+12,30,"kỳ thi, bài thi",しけん,試験,THÍ NGHIỆM
+12,31,món Sukiyaki,すきやき,すき焼き,THIÊU
+12,32,món gỏi cá sống Sashimi,さしみ,刺身,THÍCH THÂN
+12,33,Sushi,［お］すし,［お］寿司,THỌ TI
+12,34,Tempura,てんぷら,天ぷら,THIÊN
+12,35,nghệ thuật cắm hoa,いけばな,生け花,SINH HOA
+12,36,lá đỏ,もみじ,紅葉,HỒNG DIỆP
+12,37,"phía nào, đằng nào, chỗ nào, đâu",どちら,,
+12,38,cả hai,どちらも,,
+12,39,hơn hẳn,ずっと,,
+12,40,lần đầu tiên,はじめて,初めて,SƠ
+12,41,Tôi đã về đây,ただいま。,,
+12,42,Anh/chị đã về đấy à,おかえりなさい。,お帰りなさい。,QUY
+12,43,"Ghê quá nhỉ, hay quá nhỉ",すごいですね。,,
+12,44,nhưng,でも,,
+12,45,Tôi mệt rồi,つかれました。,疲れました。,BÌ
+12,46,Lễ hội Gion,ぎおんまつり,祇園祭,KỲ VIÊN TẾ
+12,47,Hồng Kông,ホンコン,香港,HƯƠNG CẢNG
+12,48,Singapore,シンガポール,,
+12,49,tên một siêu thị giả tưởng,まいにちや,毎日屋,MỖI NHẬT ỐC
+12,50,tên một siêu thị giả tưởng,ＡＣＢストア,,
+12,51,tên một siêu thị giả tưởng,ジャパン,,
+13,1,chơi,あそびます,遊びます,DU
+13,2,bơi,およぎます,泳ぎます,VỊNH
+13,3,đón,むかえます,迎えます,NGHINH
+13,4,mệt,つかれます,疲れます,BÌ
+13,5,gửi thư,［てがみを～］だします,［手紙を～］出します,THỦ CHỈ / XUẤT
+13,6,vào quán giải khát,［きっさてんに～］はいります,［喫茶店に～］入ります,KHIẾT TRÀ ĐIẾM / NHẬP
+13,7,ra khỏi quán giải khát,［きっさてんを～］でます,［喫茶店を～］出ます,KHIẾT TRÀ ĐIẾM / XUẤT
+13,8,"kết hôn, lập gia đình, cưới",けっこんします,結婚します,KẾT HÔN
+13,9,mua hàng,かいものします,買い物します,MÃI VẬT
+13,10,ăn cơm,しょくじします,食事します,THỰC SỰ
+13,11,đi dạo ở công viên,［こうえんを～］さんぽします,［公園を～］散歩します,CÔNG VIÊN / TÁN BỘ
+13,12,"vất vả, khó khăn, khổ",たいへん［な］,大変［な］,ĐẠI BIẾN
+13,13,muốn có,ほしい,欲しい,DỤC
+13,14,"buồn, cô đơn",さびしい,寂しい,TỊCH
+13,15,rộng,ひろい,広い,QUẢNG
+13,16,"chật, hẹp",せまい,狭い,HIỆP
+13,17,"văn phòng hành chính quận, thành phố",しやくしょ,市役所,THỊ DỊCH SỞ
+13,18,bể bơi,プール,,
+13,19,sông,かわ,川,XUYÊN
+13,20,kinh tế,けいざい,経済,KINH TẾ
+13,21,mỹ thuật,びじゅつ,美術,MỸ THUẬT
+13,22,câu cá,つり,釣り,ĐIẾU
+13,23,trượt tuyết,スキー,,
+13,24,"họp, cuộc họp",かいぎ,会議,HỘI NGHỊ
+13,25,đăng ký,とうろく,登録,ĐĂNG LỤC
+13,26,cuối tuần,しゅうまつ,週末,CHU MẠT
+13,27,"khoảng ~, dùng cho thời gian",～ごろ,～頃,KHOẢNH
+13,28,cái gì đó,なにか,何か,HÀ
+13,29,"đâu đó, chỗ nào đó",どこか,,
+13,30,Tôi đói rồi,おなかが すきました。,,
+13,31,Tôi no rồi,おなかが いっぱいです。,,
+13,32,Tôi khát,のどが かわきました。,,
+13,33,Thế à. / Như vậy nhỉ,そうですね。,,
+13,34,Nhất trí. / Chúng ta thống nhất như thế,そうしましょう。,,
+13,35,Anh/chị dùng món gì ạ?,ごちゅうもんは？,ご注文は？,CHÚ VĂN
+13,36,"cơm suất, cơm phần",ていしょく,定食,ĐỊNH THỰC
+13,37,món cơm thịt bò,ぎゅうどん,牛どん,NGƯU
+13,38,Xin anh/chị vui lòng đợi một chút,［しょうしょう］おまちください。,［少々］お待ちください。,THIỂU / ĐÃI
+13,39,"riêng ra, để riêng",べつべつに,別々に,BIỆT
+13,40,Nga,ロシア,,
+13,41,tên một nhà hàng giả tưởng,つるや,,
+13,42,tên một chương trình truyền hình giả tưởng,おはようテレビ,,
+14,1,"bật điện, bật máy điều hòa",つけます,点けます,ĐIỂM
+14,2,"tắt điện, tắt máy điều hòa",けします,消します,TIÊU
+14,3,"mở cửa, mở cửa sổ",あけます,開けます,KHAI
+14,4,"đóng cửa, đóng cửa sổ",しめます,閉めます,BẾ
+14,5,"vội, gấp",いそぎます,急ぎます,CẤP
+14,6,"đợi, chờ",まちます,待ちます,ĐÃI
+14,7,"dừng, đỗ xe",とめます,止めます,CHỈ
+14,8,"rẽ phải, quẹo phải",［みぎへ～］まがります,［右へ～］曲がります,HỮU / KHÚC
+14,9,"mang, cầm",もちます,持ちます,TRÌ
+14,10,lấy,とります,取ります,THỦ
+14,11,"giúp, giúp đỡ",てつだいます,手伝います,THỦ / TRUYỀN
+14,12,"gọi taxi, gọi tên",よびます,呼びます,HÔ
+14,13,"nói, nói chuyện",はなします,話します,THOẠI
+14,14,"cho xem, trình cho xem",みせます,見せます,KIẾN
+14,15,"nói địa chỉ, cho biết địa chỉ",［じゅうしょを～］おしえます,［住所を～］教えます,TRÚ SỞ / GIÁO
+14,16,bắt đầu,はじめます,始めます,THỦY
+14,17,"mưa rơi, tuyết rơi",［あめが～］ふります,［雨が～］降ります,VŨ / GIÁNG
+14,18,"sao chép, copy",コピーします,,
+14,19,máy điều hòa,エアコン,,
+14,20,hộ chiếu,パスポート,,
+14,21,tên,なまえ,名前,DANH TIỀN
+14,22,địa chỉ,じゅうしょ,住所,TRÚ SỞ
+14,23,bản đồ,ちず,地図,ĐỊA ĐỒ
+14,24,muối,しお,塩,DIÊM
+14,25,đường,さとう,砂糖,SA ĐƯỜNG
+14,26,cách đọc,よみかた,読み方,ĐỘC PHƯƠNG
+14,27,"cách làm, cách ~",～かた,～方,PHƯƠNG
+14,28,"chậm, thong thả, thoải mái",ゆっくり,,
+14,29,"ngay, lập tức",すぐ,直ぐ,TRỰC
+14,30,"lại, lần nữa",また,,
+14,31,"sau, sau đó",あとで,後で,HẬU
+14,32,thêm một chút nữa thôi,もう すこし,もう少し,THIẾU
+14,33,thêm ~,もう～,,
+14,34,Được chứ. / Được ạ,いいですよ。,,
+14,35,Thôi nào. / Nào,さあ,,
+14,36,Ô! / Ủa?,あれ？,,
+14,37,Anh/chị hãy rẽ phải ở chỗ đèn tín hiệu,しんごうをみぎへまがってください,信号を右へ曲がってください,TÍN HIỆU / HỮU / KHÚC
+14,38,thẳng,まっすぐ,,
+14,39,Gửi anh/chị tiền này. / Tôi trả bằng cái này,これでおねがいします。,これでお願いします。,NGUYỆN
+14,40,"tiền lẻ, tiền thừa",おつり,お釣り,ĐIẾU
+14,41,"Umeda, tên một địa phương ở Osaka",うめだ,梅田,MAI ĐIỀN
+15,1,đứng,たちます,立ちます,LẬP
+15,2,ngồi,すわります,座ります,TỌA
+15,3,"dùng, sử dụng",つかいます,使います,SỬ
+15,4,"đặt, để",おきます,置きます,TRÍ
+15,5,"làm, chế tạo, sản xuất",つくります,作ります／造ります,TÁC / TẠO
+15,6,bán,うります,売ります,MẠI
+15,7,biết,しります,知ります,TRI
+15,8,"sống, ở",すみます,住みます,TRÚ
+15,9,nghiên cứu,けんきゅうします,研究します,NGHIÊN CỨU
+15,10,biết,しって います,知っています,TRI
+15,11,sống ở Osaka,［おおさかに～］すんで います,［大阪に～］住んでいます,ĐẠI PHẢN / TRÚ
+15,12,"tài liệu, tư liệu",しりょう,資料,TƯ LIỆU
+15,13,ca-ta-lô,カタログ,,
+15,14,bảng giờ tàu chạy,じこくひょう,時刻表,THỜI KHẮC BIỂU
+15,15,quần áo,ふく,服,PHỤC
+15,16,sản phẩm,せいひん,製品,CHẾ PHẨM
+15,17,phần mềm,ソフト,,
+15,18,chuyên môn,せんもん,専門,CHUYÊN MÔN
+15,19,nha sĩ,はいしゃ,歯医者,XỈ Y GIẢ
+15,20,hiệu cắt tóc,とこや,床屋,SÀNG ỐC
+15,21,quầy bán vé trong nhà hát,プレイガイド,,
+15,22,độc thân,どくしん,独身,ĐỘC THÂN
+15,23,đặc biệt,とくに,特に,ĐẶC
+15,24,"nhớ lại, hồi tưởng",おもいだします,思い出します,TƯ XUẤT
+15,25,gia đình của người khác,ごかぞく,ご家族,GIA TỘC
+15,26,thể kính trọng của います,いらっしゃいます,,
+15,27,trường trung học phổ thông,こうこう,高校,CAO HIỆU
+15,28,"Nihonbashi, tên một khu phố buôn bán ở Osaka",にっぽんばし,日本橋,NHẬT BẢN KIỀU
+16,1,"đi, lên tàu",［でんしゃに～］のります,［電車に～］乗ります,ĐIỆN XA / THỪA
+16,2,xuống tàu,［でんしゃを～］おります,［電車を～］降ります,ĐIỆN XA / GIÁNG
+16,3,"chuyển tàu, đổi tàu",のりかえます,乗り換えます,THỪA / HOÁN
+16,4,tắm vòi hoa sen,［シャワーを～］あびます,［シャワーを～］浴びます,DỤC
+16,5,"cho vào, bỏ vào",いれます,入れます,NHẬP
+16,6,"lấy ra, rút tiền",だします,出します,XUẤT
+16,7,"vào đại học, nhập học đại học",［だいがくに～］はいります,［大学に～］入ります,ĐẠI HỌC / NHẬP
+16,8,"ra khỏi đại học, tốt nghiệp đại học",［だいがくを～］でます,［大学を～］出ます,ĐẠI HỌC / XUẤT
+16,9,"bỏ việc, thôi việc ở công ty",［かいしゃを～］やめます,［会社を～］辞めます,HỘI XÃ / TỪ
+16,10,"bấm, ấn nút",おします,押します,ÁP
+16,11,trẻ,わかい,若い,NHƯỢC
+16,12,dài,ながい,長い,TRƯỜNG
+16,13,ngắn,みじかい,短い,ĐOẢN
+16,14,sáng,あかるい,明るい,MINH
+16,15,tối,くらい,暗い,ÁM
+16,16,"cao, dùng cho người",せが たかい,背が高い,BỐI / CAO
+16,17,thông minh,あたまが いい,頭がいい,ĐẦU
+16,18,"người, cơ thể",からだ,体,THỂ
+16,19,đầu,あたま,頭,ĐẦU
+16,20,tóc,かみ,髪,PHÁT
+16,21,mặt,かお,顔,NHAN
+16,22,mắt,め,目,MỤC
+16,23,tai,みみ,耳,NHĨ
+16,24,miệng,くち,口,KHẨU
+16,25,răng,は,歯,XỈ
+16,26,bụng,おなか,お腹,PHÚC
+16,27,chân,あし,足,TÚC
+16,28,dịch vụ,サービス,,
+16,29,chạy bộ,ジョギング,,
+16,30,vòi hoa sen,シャワー,,
+16,31,màu xanh lá cây,みどり,緑,LỤC
+16,32,chùa,［お］てら,［お］寺,TỰ
+16,33,đền thờ Thần đạo,じんじゃ,神社,THẦN XÃ
+16,34,"lưu học sinh, du học sinh",りゅうがくせい,留学生,LƯU HỌC SINH
+16,35,"số một, nhất",いちばん,一番,NHẤT PHIÊN
+16,36,làm thế nào,どうやって,,
+16,37,"cái nào ~, dùng khi có từ ba lựa chọn trở lên",どの～,,
+16,38,"Không, tôi còn kém lắm",［いいえ、］まだまだです。,,
+16,39,Anh/chị rút tiền ạ?,おひきだしですか,お引き出しですか,DẪN XUẤT
+16,40,"trước hết, đầu tiên",まず,,
+16,41,"thẻ ngân hàng, thẻ ATM",キャッシュカード,,
+16,42,"mã số bí mật, mật khẩu",あんしょうばんごう,暗証番号,ÁM CHỨNG PHIÊN HIỆU
+16,43,tiếp theo,つぎに,次に,THỨ
+16,44,"số tiền, khoản tiền",きんがく,金額,KIM NGẠCH
+16,45,"sự xác nhận, sự kiểm tra",かくにん,確認,XÁC NHẬN
+16,46,nút,ボタン,,
+16,47,công ty đường sắt Nhật Bản,ＪＲ,,
+16,48,châu Á,アジア,,
+16,49,"Bandung, một địa danh ở Indonesia",バンドン,,
+16,50,"Veracruz, một địa danh ở Mexico",ベラクルス,,
+16,51,"Franken, một địa danh ở Đức",フランケン,,
+16,52,Việt Nam,ベトナム,,
+16,53,Huế,フェ,,
+16,54,tên một điểm dừng xe buýt giả tưởng,だいがくまえ,大学前,ĐẠI HỌC TIỀN
+17,1,nhớ,,,giác
+17,2,quên,,,
+17,3,"mất, đánh mất",,,
+17,4,nộp báo cáo,,,xuất
+17,5,trả tiền,,,phất
+17,6,trả lại,,,phản
+17,7,ra ngoài,,,xuất
+17,8,"cởi quần áo, cởi giày",,,thoát
+17,9,"mang đi, mang theo",,,trì hành
+17,10,mang đến,,,trì lai
+17,11,lo lắng,,,tâm phối
+17,12,"làm thêm, làm quá giờ",,,tàn nghiệp
+17,13,đi công tác,,,xuất trương
+17,14,uống thuốc,,,dược
+17,15,"tắm bồn, vào bồn tắm",,,phong lữ nhập
+17,16,"quan trọng, quý giá",,,đại thiết
+17,17,"không sao, không có vấn đề gì",,,đại trượng phu
+17,18,nguy hiểm,,,nguy
+17,19,vấn đề,,,vấn đề
+17,20,câu trả lời,,,đáp 
+17,21,cấm hút thuốc,,,cầm yên
+17,22,thẻ bảo hiểm y tế,,,"kiện khang , bảo hiểm chứng"
+17,23,"cảm, cúm",,,phong tà 
+17,24,sốt,,,nhiệt 
+17,25,"ốm, bệnh",,,bệnh khí
+17,26,thuốc,,,dước
+17,27,bồn tắm,,,phong lữ nhập
+17,28,áo khoác,,,thượng trước
+17,29,quần áo lót,,,hạ trước
+17,30,"thầy, cô",,,tiên sinh 
+17,31,vài ngày,,,
+17,32,trước ~,,,
+17,33,vì thế,,,
+17,34,Có vấn đề gì?,,,
+17,35,Tôi bị đau họng.,,,
+17,36,Anh/chị nhớ giữ gìn sức khỏe.,,,
+18,1,có thể,,,xuất lai
+18,2,rửa,,,tẩy
+18,3,chơi nhạc cụ,,,đàn
+18,4,hát,,,ca
+18,5,"sưu tầm, thu thập",,,tập
+18,6,"vứt, bỏ đi",,,xả 
+18,7,đổi,,,hoán
+18,8,lái xe,,,vận chuyển 
+18,9,đặt chỗ,,,dự ước
+18,10,tham quan học tập,,,kiến học 
+18,11,đàn piano,,,
+18,12,mét,,,
+18,13,quốc tế,,,quốc tế
+18,14,tiền mặt,,,hiện kim 
+18,15,sở thích,,,thú vị
+18,16,nhật ký,,,
+18,17,cầu nguyện,,,kỳ
+18,18,tổ trưởng,,,ca trưởng
+18,19,trưởng phòng,,,bộ trưởng 
+18,20,giám đốc,,,xã trưởng
+18,21,động vật,,,động vật
+18,22,ngựa,,,mã
+18,23,thế à,,  ,
+18,24,Hay thật nhỉ,,,
+18,25,khó mà,,,
+18,26,trang trại,,,mục trường
+18,27,Thật không,,,bản đương
+18,28,nhất định,,,thị phi
+18,29,Beatles,,,
+19,1,leo núi,,,đăng 
+19,2,trọ khách sạn,,,bạc 
+19,3,dọn vệ sinh,,,tảo trừ
+19,4,giặt,,,tẩy trạc
+19,5,luyện tập,,,luyện tập
+19,6,trở thành,,,
+19,7,buồn ngủ,,,miên
+19,8,mạnh,,,cường
+19,9,yếu,,,nhược
+19,10,tình trạng tốt,,,điều tử
+19,11,tình trạng xấu,,,điều tử xấu
+19,12,tình trạng,,,điều tử xấu
+19,13,golf,,,
+19,14,Sumo,,,tương phác
+19,15,Pachinko,,,
+19,16,trà,,,trà
+19,17,ngày,,,nhật
+19,18,một lần,,,nhất hồi
+19,19,chưa lần nào,,,nhất hồi
+19,20,dần dần,,,
+19,21,sắp,,,
+19,22,cảm ơn,,,
+19,23,nâng cốc,,,càn bôi
+19,24,thật ra,,,thực 
+19,25,ăn kiêng,,,
+19,26,nhiều lần,,,hà hồi 
+19,27,nhưng,,,
+19,28,quá sức,,,vô lí
+19,29,tốt cho sức khỏe,,,thể
+19,30,bánh ngọt,,,
+19,31,Katsushika Hokusai,,,
+20,1,cần visa,,,yếu
+20,2,tìm hiểu,,,điều 
+20,3,sửa,,,trực
+20,4,tu sửa,,,tu lí 
+20,5,gọi điện,,,điện thoại
+20,6,tớ,,,bộc
+20,7,cậu,,,quân
+20,8,#NAME?,,,
+20,9,ừ,,,
+20,10,không,,,
+20,11,nhân viên công ty,,,
+20,12,"từ, tiếng",,,ngôn diệp
+20,13,giá cả,,,vật giá
+20,14,kimono,,,trước vật
+20,15,visa,,,
+20,16,ban đầu,,,thủy
+20,17,kết thúc,,,chung
+20,18,phía này,,,
+20,19,phía đó,,,
+20,20,phía kia,,,
+20,21,phía nào,,,
+20,22,hôm nọ,,,gian
+20,23,mọi người cùng,,,
+20,24,nhưng,,,
+20,25,về nước không,,,
+20,26,tính sao,,,
+20,27,để tôi xem,,,
+20,28,nếu thích,,,
+20,29,nhiều thứ,,,
+21,1,nghĩ,,,tư 
+21,2,nói,,,ngôn
+21,3,đủ,,,túc
+21,4,thắng,,,thắng
+21,5,thua,,,phụ
+21,6,được tổ chức,,,
+21,7,giúp ích,,,dịch lập
+21,8,lãng phí,,,vô đà
+21,9,bất tiện,,,
+21,10,giống,,,đồng 
+21,11,ghê quá,,,
+21,12,thủ tướng,,,thủ tướng
+21,13,tổng thống,,,đại thống lĩnh
+21,14,chính trị,,,chính trị
+21,15,tin tức,,,
+21,16,bài phát biểu,,,
+21,17,trận đấu,,,thí hợp
+21,18,làm thêm,,,
+21,19,ý kiến,,,ý kiến
+21,20,câu chuyện,,,thoại
+21,21,hài hước,,,
+21,22,sự lãng phí,,,vô đà
+21,23,thiết kế,,,
+21,24,giao thông,,,giao thông
+21,25,giờ cao điểm,,,
+21,26,gần đây,,,tối cận
+21,27,chắc,,,đa phân
+21,28,chắc chắn,,,
+21,29,thật sự,,,bản đương
+21,30,không lắm,,,
+21,31,về,,,
+21,32,đành chịu,,,
+21,33,lâu không gặp,,,
+21,34,mời uống,,,
+21,35,tôi phải xem,,,
+21,36,tất nhiên,,,
+21,37,kangaroo,,,
+21,38,James Cook,,,
+22,1,"mặc [áo sơ mi, v.v.]",［シャツを～］きます,［シャツを～］着ます,TRƯỚC
+22,2,"đi, mặc [giày, quần âu, v.v.]",［くつを～］はきます,［靴を～］はきます,NGOA
+22,3,"đội [mũ, v.v.]",［ぼうしを～］かぶります,［帽子を～］かぶります,MẠO TỬ
+22,4,đeo [kính],［めがねを～］かけます,［眼鏡を～］かけます,NHÃN KÍNH
+22,5,sinh ra,うまれます,生まれます,SINH
+22,6,áo khoác,コート,,
+22,7,com-lê,スーツ,,
+22,8,áo len,セーター,,
+22,9,mũ,ぼうし,帽子,MẠO TỬ
+22,10,kính,めがね,眼鏡,NHÃN KÍNH
+22,11,"tốt, rõ (chỉ mức độ)",よく,,
+22,12,Chúc mừng.,おめでとうございます。,,
+22,13,"phía này, đằng này, chỗ này, đây",こちら,,
+22,14,tiền thuê nhà,やちん,家賃,GIA NHẪM
+22,15,ừ~./ Để tôi xem./ Thế nào nhỉ.,うーん。,,
+22,16,bếp kèm phòng ăn,ダイニングキチン,,
+22,17,phòng kiểu Nhật,わしつ,和室,HÒA THẤT
+22,18,chỗ để chăn gối trong một căn phòng kiểu Nhật,おしいれ,押入れ,ÁP NHẬP
+22,19,"chăn, đệm",ふとん,布団,BỐ ĐOÀN
+22,20,nhà chung cư,アパート,,
+22,21,Pari,パリ,,
+22,22,Vạn Lý Trường Thành,ばんりのちょうじょう,万里の長城,VẠN LÝ TRƯỜNG THÀNH
+22,23,Trung tâm phát triển hoạt động giải trí cho người dân,よかかいはつセンター,余暇開発センター,DƯ HẠ KHAI PHÁT
+22,24,sách trắng về sử dụng thời gian rảnh rỗi,レジャーはくしょ,レジャー白書,BẠCH THƯ
+23,1,hỏi [giáo viên],［せんせいに～］ききます,［先生に～］聞きます,TIÊN SINH VĂN
+23,2,vặn (núm),まわします,回します,HỒI
+23,3,chơi (nhạc cụ),ひきます,引きます,DẪN
+23,4,đổi,かえます,変えます,BIẾN
+23,5,"sờ, chạm vào [cửa]",［ドアに～］さわります,［ドアに～］触ります,XÚC
+23,6,"ra, đi ra [tiền thừa ~]",［おつりが～］でます,［お釣りが～］出ます,ĐIẾU XUẤT
+23,7,"chuyển động, chạy [đồng hồ ~]",［とけいが～］うごきます,［時計が～］動きます,THỜI KẾ ĐỘNG
+23,8,đi bộ [trên đường],［みちを～］あるきます,［道を～］歩きます,ĐẠO BỘ
+23,9,"qua, đi qua [cầu]",［はしを～］わたります,［橋を～］渡ります,KIỀU ĐỘ
+23,10,"chú ý, cẩn thận [với ô-tô]",［くるまに～］きをつけます,［車に～］気をつけます,XA KHÍ
+23,11,chuyển nhà,ひっこしします,引っ越しします,DẪN VIỆT
+23,12,cửa hàng đồ điện,でんきや,電気屋,ĐIỆN KHÍ ỐC
+23,13,cửa hàng ~,～や,～屋,ỐC
+23,14,"cỡ, kích thước",サイズ,,
+23,15,âm thanh,おと,音,ÂM
+23,16,"máy, máy móc",きかい,機械,CƠ GIỚI
+23,17,núm vặn,つまみ,,
+23,18,hỏng (bị hỏng),こしょう,故障,CỐ CHƯỚNG
+23,19,đường,みち,道,ĐẠO
+23,20,ngã tư,こうさてん,交差点,GIAO SAI ĐIỂM
+23,21,đèn tín hiệu,しんごう,信号,TÍN HIỆU
+23,22,góc,かど,角,GIÁC
+23,23,cầu,はし,橋,KIỀU
+23,24,bãi đỗ xe,ちゅうしゃじょう,駐車場,TRÚ XA TRƯỜNG
+23,25,"thứ –, số – (biểu thị thứ tự)",―め,―目,MỤC
+23,26,Tết (Dương lịch),［お］しょうがつ,［お］正月,CHÍNH NGUYỆT
+23,27,Xin cám ơn anh/chị đã đãi tôi bữa cơm.,ごちそうさま［でした］。,,
+23,28,tòa nhà,たてもの,建物,KIẾN VẬT
+23,29,thẻ đăng ký người nước ngoài,がいこくじんとうろくしょう,外国人登録証,NGOẠI QUỐC NHÂN ĐĂNG LỤC CHỨNG
+23,30,Thái tử Shotoku (574-622),しょうとくたいし,聖徳太子,THÁNH ĐỨC THÁI TỬ
+23,31,Chùa Horyu-ji,ほうりゅうじ,法隆寺,PHÁP LONG TỰ
+23,32,tên một loại trà (giả tưởng),げんきちゃ,元気茶,NGUYÊN KHÍ TRÀ
+23,33,tên một nhà ga (giả tưởng),ほんだえき,本田駅,BẢN ĐIỀN DỊCH
+23,34,tên một bến xe buýt (giả tưởng),としょかんまえ,図書館前,ĐỒ THƯ QUÁN TIỀN
+24,1,"cho, tặng (tôi)",くれます,,
+24,2,dẫn đi,つれていきます,連れて行きます,LIÊN HÀNH
+24,3,dẫn đến,つれてきます,連れて来ます,LIÊN LAI
+24,4,"đưa đi, đưa đến, tiễn [một ai đó]",［ひとを～］おくります,［人を～］送ります,NHÂN TỐNG
+24,5,giới thiệu,しょうかいします,紹介します,THIỆU GIỚI
+24,6,"hướng dẫn, giới thiệu, dẫn đường",あんないします,案内します,ÁN NỘI
+24,7,"giải thích, trình bày",せつめいします,説明します,THUYẾT MINH
+24,8,pha [cà phê],［コーヒーを～］いれます,,
+24,9,"ông nội, ông ngoại, ông",おじいさん／おじいちゃん,,
+24,10,"bà nội, bà ngoại, bà",おばあさん／おばあちゃん,,
+24,11,sự chuẩn bị [～します: chuẩn bị],じゅんび［～します］,準備［～します］,CHUẨN BỊ
+24,12,ý nghĩa,いみ,意味,Ý VỊ
+24,13,bánh kẹo,［お］かし,［お］菓子,QUẢ TỬ
+24,14,"toàn bộ, tất cả",ぜんぶ,全部,TOÀN BỘ
+24,15,tự mình,じぶんで,自分で,TỰ PHÂN
+24,16,"ngoài ra, còn gì/ai khác",ほかに,他に,THA
+24,17,xe ô-tô chở khách loại nhỏ,ワゴンしゃ,ワゴン車,XA
+24,18,cơm hộp,［お］べんとう,［お］弁当,BIỆN ĐƯƠNG
+24,19,Ngày của Mẹ,ははのひ,母の日,MẪU NHẬT
+25,1,"nghĩ, suy nghĩ",かんがえます,考えます,KHẢO
+25,2,đến [ga],［えきに～］つきます,［駅に～］着きます,DỊCH TRƯỚC
+25,3,du học,りゅうがくします,留学します,LƯU HỌC
+25,4,"thêm tuổi, có tuổi",［としを～］とります,［年を～］取ります,NIÊN THỦ
+25,5,"quê, nông thôn",いなか,田舎,ĐIỀN XÁ
+25,6,đại sứ quán,たいしかん,大使館,ĐẠI SỨ QUÁN
+25,7,"nhóm, đoàn",グループ,,
+25,8,cơ hội,チャンス,,
+25,9,một trăm triệu,おく,億,ỨC
+25,10,nếu [～ thì],もし［～たら］,,
+25,11,"cho dù, dù ～ thế nào đi nữa",いくら［～ても］,,
+25,12,việc chuyển địa điểm làm việc [～します: chuyển công tác],てんきん［～します］,転勤［～します］,CHUYỂN CẦN
+25,13,"việc, chuyện [～のこと: việc ～]",こと［～のこと］,,
+25,14,Chúng ta cùng uống nhé.,いっぱいのみましょう。,一杯飲みましょう。,NHẤT BÔI ẨM
+25,15,Anh/chị đã giúp tôi rất nhiều.,［いろいろ］おせわになりました。,［いろいろ］お世話になりました。,THẾ THOẠI
+25,16,cố gắng,がんばります,頑張ります,NGOAN TRƯƠNG
+25,17,Chúc anh/chị mạnh khỏe.,どうぞおげんきで。,どうぞお元気で。,NGUYÊN KHÍ
+25,18,Việt Nam,ベトナム,,

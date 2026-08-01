@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Kotoba Dojo - Luyện từ vựng tiếng Nhật theo bài Minna no Nihongo."
+    />
+    <title>Kotoba Dojo | Luyện từ vựng</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <main class="app-shell">
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="Kotoba Dojo - Trang chu">
+          <span class="brand-mark" aria-hidden="true">言</span>
+          <span>
+            <strong>KOTOBA</strong>
+          <small>DOJO</small>
+          </span>
+        </a>
+        <p class="header-note"><span class="pulse-dot"></span> 25 bài từ vựng Minna no Nihongo</p>
+      </header>
+
+      <section class="hero" id="top" aria-labelledby="page-title">
+        <p class="eyebrow">NHANH - NHỚ - ĐÚNG LÚC</p>
+        <h1>Luyện từ vựng theo<br /><em>nhịp của riêng bạn.</em></h1>
+        <p class="hero-copy">
+          Chọn bài, chọn cách nhớ, và để từng từ mới ở lại lâu hơn trong trí nhớ.
+        </p>
+        <div class="hero-stats" aria-label="Tien do tong quan">
+          <div><strong id="mastered-total">0</strong><span>từ đã thuộc</span></div>
+          <div><strong id="studied-total">0</strong><span>từ đã luyện</span></div>
+          <div><strong id="lesson-total">25</strong><span>bài có sẵn</span></div>
+        </div>
+      </section>
+
+      <section class="content-section lesson-section" aria-labelledby="lesson-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">CHỌN ĐIỂM XUẤT PHÁT</p>
+            <h2 id="lesson-title">Từ vựng theo bài</h2>
+          </div>
+          <button class="text-button" id="continue-button" type="button">Luyện tiếp <span>→</span></button>
+        </div>
+        <div class="lesson-grid" id="lesson-grid" aria-live="polite">
+          <p class="loading">Đang nạp từ vựng...</p>
+        </div>
+      </section>
+
+      <section class="content-section mode-section" aria-labelledby="mode-title">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">BA CON ĐƯỜNG GHI NHỚ</p>
+            <h2 id="mode-title">Bạn muốn luyện gì hôm nay?</h2>
+          </div>
+        </div>
+        <div class="mode-grid" id="mode-grid">
+          <button class="mode-card active" type="button" data-mode="hiragana" aria-pressed="true">
+            <span class="mode-icon kana" aria-hidden="true">あ</span>
+            <span class="mode-content">
+              <strong>Hiragana</strong>
+              <small>Nhìn nghĩa, gõ cách đọc</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">→</span>
+          </button>
+          <button class="mode-card" type="button" data-mode="kanji" aria-pressed="false">
+            <span class="mode-icon kanji" aria-hidden="true">漢</span>
+            <span class="mode-content">
+              <strong>Hán tự</strong>
+              <small>Nhìn nghĩa và cách đọc, nhớ chữ</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">→</span>
+          </button>
+          <button class="mode-card" type="button" data-mode="hanviet" aria-pressed="false">
+            <span class="mode-icon hanviet" aria-hidden="true">HV</span>
+            <span class="mode-content">
+              <strong>Hán - Việt</strong>
+              <small>Nhìn chữ, gõ âm Hán Việt</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+        <div class="practice-bar">
+          <p><span class="selected-lesson-label">Bài 1</span> <span class="muted">-</span> <span id="practice-description">Nhìn nghĩa tiếng Việt và viết bằng Hiragana.</span></p>
+          <div class="practice-actions">
+            <label class="question-count">Số câu
+              <select id="question-count" aria-label="Số câu luyện tập">
+                <option value="10">10 câu</option>
+                <option value="20">20 câu</option>
+                <option value="all">Toàn bộ bài</option>
+              </select>
+            </label>
+            <button class="primary-button" id="start-button" type="button">Bắt đầu luyện <span>→</span></button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="practice-dialog" id="practice-dialog" aria-labelledby="practice-title">
+      <div class="dialog-topbar">
+        <button class="close-button" id="close-practice" type="button" aria-label="Đóng bài luyện">×</button>
+        <div class="progress-group">
+          <span id="progress-text">Câu 1 / 10</span>
+          <div class="progress-track"><span id="progress-bar"></span></div>
+        </div>
+        <span class="score-chip"><span id="score-value">0</span> đúng</span>
+      </div>
+
+      <section class="quiz-panel" id="quiz-panel">
+        <p class="quiz-mode" id="quiz-mode-label">HIRAGANA</p>
+        <p class="prompt-label" id="prompt-label">NGHĨA TIẾNG VIỆT</p>
+        <h2 id="practice-title" class="question-display">toi</h2>
+        <p class="question-support" id="question-support"></p>
+        <form id="answer-form" novalidate>
+          <label class="sr-only" for="answer-input">Câu trả lời</label>
+          <input id="answer-input" autocomplete="off" autocapitalize="none" enterkeyhint="done" spellcheck="false" placeholder="Nhập câu trả lời..." />
+          <button class="primary-button" id="check-button" type="submit">Kiểm tra <span>↵</span></button>
+        </form>
+        <div class="feedback" id="feedback" hidden>
+          <div class="feedback-title" id="feedback-title"></div>
+          <p id="answer-reveal"></p>
+          <button class="next-button" id="next-button" type="button">Câu tiếp theo <span>→</span></button>
+        </div>
+        <button class="hint-button" id="hint-button" type="button">Hiện đáp án</button>
+      </section>
+
+      <section class="result-panel" id="result-panel" hidden>
+        <p class="eyebrow">HOÀN THÀNH PHIÊN LUYỆN</p>
+        <p class="result-number"><span id="result-score">0</span>/<span id="result-total">0</span></p>
+        <h2 id="result-title">Bạn đang làm rất tốt.</h2>
+        <p id="result-copy"></p>
+        <div class="review-list" id="review-list"></div>
+        <div class="result-actions">
+          <button class="secondary-button" id="finish-button" type="button">Về trang bài học</button>
+          <button class="primary-button" id="retry-button" type="button">Luyện lại <span>↻</span></button>
+        </div>
+      </section>
+    </dialog>
+
+    <template id="lesson-template">
+      <button class="lesson-card" type="button">
+        <span class="lesson-number"></span>
+        <span class="lesson-meta"><strong></strong><small></small></span>
+        <span class="lesson-progress"><i></i></span>
+      </button>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
