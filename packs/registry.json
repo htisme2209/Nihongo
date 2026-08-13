@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "defaultPackId": "minna-no-nihongo-1-25",
+  "packs": [
+    {
+      "id": "minna-no-nihongo-1-25",
+      "manifest": "packs/minna-no-nihongo-1-25/manifest.json",
+      "status": "legacy-content"
+    }
+  ]
+}

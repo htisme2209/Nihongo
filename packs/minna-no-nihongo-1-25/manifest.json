@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "minna-no-nihongo-1-25",
+  "version": "1.0.0",
+  "title": {
+    "vi": "Minna no Nihongo - Bài 1 đến 25",
+    "en": "Minna no Nihongo - Lessons 1 to 25"
+  },
+  "description": {
+    "vi": "Gói dữ liệu kế thừa đi kèm dự án. Xem ghi chú quyền nội dung trước khi phân phối lại.",
+    "en": "Legacy data bundled with the project. Review the content-rights notice before redistributing."
+  },
+  "source": {
+    "name": "Existing project data",
+    "rightsStatus": "unverified"
+  },
+  "content": {
+    "format": "csv",
+    "path": "../../minna_bai1_25_nghia_dap_an_kanji_hanviet.csv",
+    "encoding": "utf-8",
+    "columns": {
+      "id": null,
+      "unit": "Bai",
+      "order": "STT",
+      "meaning": "Nghia_Tieng_Viet",
+      "reading": "Dap_An_Tieng_Nhat",
+      "written": "Han_Tu",
+      "sinoVietnamese": "Han_Viet"
+    }
+  },
+  "units": {
+    "kind": "lesson",
+    "label": {
+      "vi": "Bài",
+      "en": "Lesson"
+    }
+  },
+  "modes": [
+    "flashcard",
+    "hiragana",
+    "kanji-builder",
+    "hanviet"
+  ],
+  "legacyProgressIds": true
+}

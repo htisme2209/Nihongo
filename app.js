@@ -1,4 +1,4 @@
-const ANSWER_DATA_FILE = "minna_bai1_25_nghia_dap_an_kanji_hanviet.csv";
+const PACK_REGISTRY_URL = "packs/registry.json";
 const FLASHCARD_STORAGE_KEY = "kotoba-dojo-flashcard-progress";
 
 const modes = {
@@ -33,7 +33,9 @@ const modes = {
 
 const state = {
   words: [],
-  selectedLesson: 1,
+  pack: null,
+  registry: null,
+  selectedUnit: "",
   selectedMode: "hiragana",
   queue: [],
   index: 0,
@@ -92,19 +94,32 @@ function parseCsv(text) {
   return rows;
 }
 
-function toWords(csv) {
+function toWords(csv, pack) {
   const [header, ...rows] = parseCsv(csv);
   header[0] = header[0].replace(/^\uFEFF/, "");
   const column = Object.fromEntries(header.map((name, index) => [name, index]));
-  return rows.map((row) => ({
-    id: `${row[column.Bai]}-${row[column.STT]}`,
-    lesson: Number(row[column.Bai]),
-    order: Number(row[column.STT]),
-    meaning: row[column.Nghia_Tieng_Viet] || "",
-    hiragana: row[column.Dap_An_Tieng_Nhat] || "",
-    kanji: row[column.Han_Tu] || "",
-    hanViet: row[column.Han_Viet] || "",
-  })).filter((word) => word.lesson && word.meaning);
+  const columns = pack.content.columns;
+  const read = (row, field) => {
+    const columnName = columns[field];
+    return typeof columnName === "string" ? row[column[columnName]] || "" : "";
+  };
+
+  return rows.map((row, index) => {
+    const unit = read(row, "unit");
+    const order = Number(read(row, "order")) || index + 1;
+    const sourceId = read(row, "id") || `${unit}-${order}`;
+    return {
+      id: pack.legacyProgressIds ? sourceId : `${pack.id}:${sourceId}`,
+      sourceId,
+      packId: pack.id,
+      unit,
+      order,
+      meaning: read(row, "meaning"),
+      hiragana: read(row, "reading"),
+      kanji: read(row, "written"),
+      hanViet: read(row, "sinoVietnamese"),
+    };
+  }).filter((word) => word.unit && word.meaning);
 }
 
 function getProgress() {
@@ -141,8 +156,22 @@ function saveFlashcardProgress(id, outcome) {
   localStorage.setItem(FLASHCARD_STORAGE_KEY, JSON.stringify(progress));
 }
 
-function progressForLesson(lesson) {
-  const words = state.words.filter((word) => word.lesson === lesson);
+function unitLabel() {
+  return state.pack?.units?.label?.vi || "Bài";
+}
+
+function displayUnit(unit) {
+  const value = String(unit);
+  const formatted = /^\d+$/.test(value) ? value.padStart(2, "0") : value;
+  return `${unitLabel()} ${formatted}`;
+}
+
+function sortUnits(units) {
+  return [...units].sort((left, right) => left.localeCompare(right, "vi", { numeric: true }));
+}
+
+function progressForUnit(unit) {
+  const words = state.words.filter((word) => word.unit === unit);
   const progress = getProgress();
   const mastered = words.filter((word) => {
     const record = progress[word.id];
@@ -163,16 +192,16 @@ function updateOverview() {
 function renderLessons() {
   const template = $("#lesson-template");
   lessonGrid.textContent = "";
-  const lessonNumbers = [...new Set(state.words.map((word) => word.lesson))].sort((a, b) => a - b);
+  const units = sortUnits(new Set(state.words.map((word) => word.unit)));
 
-  lessonNumbers.forEach((lesson) => {
+  units.forEach((unit) => {
     const fragment = template.content.cloneNode(true);
     const card = fragment.querySelector(".lesson-card");
-    const stats = progressForLesson(lesson);
-    card.dataset.lesson = lesson;
-    card.classList.toggle("selected", lesson === state.selectedLesson);
-    card.setAttribute("aria-pressed", lesson === state.selectedLesson);
-    fragment.querySelector(".lesson-number").textContent = `Bài ${String(lesson).padStart(2, "0")}`;
+    const stats = progressForUnit(unit);
+    card.dataset.unit = unit;
+    card.classList.toggle("selected", unit === state.selectedUnit);
+    card.setAttribute("aria-pressed", unit === state.selectedUnit);
+    fragment.querySelector(".lesson-number").textContent = displayUnit(unit);
     fragment.querySelector(".lesson-meta strong").textContent = `${stats.total} từ vựng`;
     fragment.querySelector(".lesson-meta small").textContent = stats.mastered ? `${stats.mastered} đã thuộc` : "Sẵn sàng luyện";
     fragment.querySelector(".lesson-progress i").style.width = `${stats.total ? (stats.mastered / stats.total) * 100 : 0}%`;
@@ -180,9 +209,9 @@ function renderLessons() {
   });
 }
 
-function setLesson(lesson) {
-  state.selectedLesson = Number(lesson);
-  $(".selected-lesson-label").textContent = `Bài ${state.selectedLesson}`;
+function setUnit(unit) {
+  state.selectedUnit = String(unit);
+  $(".selected-lesson-label").textContent = displayUnit(state.selectedUnit);
   renderLessons();
   updateFlashcardCTA();
 }
@@ -206,7 +235,7 @@ function normalize(value) {
 
 function eligibleWords() {
   const mode = modes[state.selectedMode];
-  return state.words.filter((word) => word.lesson === state.selectedLesson && mode.answer(word) && mode.prompt(word));
+  return state.words.filter((word) => word.unit === state.selectedUnit && mode.answer(word) && mode.prompt(word));
 }
 
 function shuffled(items) {
@@ -233,7 +262,7 @@ function buildKanjiChoices(word) {
   const answerTokens = kanjiTokens(word.kanji);
   const usedTokens = new Set(answerTokens);
   const lessonTokens = state.words
-    .filter((item) => item.lesson === state.selectedLesson && item.kanji)
+    .filter((item) => item.unit === state.selectedUnit && item.kanji)
     .flatMap((item) => kanjiTokens(item.kanji))
     .filter((token) => /^\p{Script=Han}$/u.test(token) && !usedTokens.has(token));
   const distractorCount = answerTokens.length > 10 ? 2 : 4;
@@ -302,12 +331,12 @@ function clearKanjiAnswer() {
 }
 
 function flashcardWords() {
-  return state.words.filter((word) => word.lesson === state.selectedLesson && (word.kanji || word.hiragana));
+  return state.words.filter((word) => word.unit === state.selectedUnit && (word.kanji || word.hiragana));
 }
 
 function updateFlashcardCTA() {
   const count = flashcardWords().length;
-  $("#flashcard-lesson-label").textContent = `Bài ${state.selectedLesson}`;
+  $("#flashcard-lesson-label").textContent = displayUnit(state.selectedUnit);
   $("#flashcard-count").textContent = count
     ? `${count} thẻ từ vựng. Chạm để lật, rồi tự đánh giá mức độ ghi nhớ.`
     : "Bài này chưa có thẻ từ vựng để hiển thị.";
@@ -325,7 +354,7 @@ function renderFlashcard() {
   const detail = [word.kanji, word.hiragana].filter(Boolean).join("  ·  ");
   const hanViet = $("#flashcard-hanviet");
 
-  $("#flashcard-progress-text").textContent = `Bài ${state.selectedLesson} · Thẻ ${flashcardState.index + 1} / ${flashcardState.deck.length}`;
+  $("#flashcard-progress-text").textContent = `${displayUnit(state.selectedUnit)} · Thẻ ${flashcardState.index + 1} / ${flashcardState.deck.length}`;
   $("#flashcard-progress-bar").style.width = `${((flashcardState.index + 1) / flashcardState.deck.length) * 100}%`;
   $("#flashcard-primary").textContent = primary;
   $("#flashcard-reading").textContent = reading;
@@ -573,13 +602,21 @@ function closePractice() {
 
 async function initialize() {
   try {
-    const response = await fetch(ANSWER_DATA_FILE);
-    if (!response.ok) throw new Error("Không thể nạp tệp dữ liệu");
-    state.words = toWords(await response.text());
+    const registryResponse = await fetch(PACK_REGISTRY_URL);
+    if (!registryResponse.ok) throw new Error("Không thể nạp danh sách gói dữ liệu");
+    state.registry = await registryResponse.json();
+    const packEntry = state.registry.packs.find((pack) => pack.id === state.registry.defaultPackId);
+    if (!packEntry) throw new Error("Không tìm thấy gói dữ liệu mặc định");
+    const manifestResponse = await fetch(packEntry.manifest);
+    if (!manifestResponse.ok) throw new Error("Không thể nạp thông tin gói dữ liệu");
+    state.pack = await manifestResponse.json();
+    const dataResponse = await fetch(new URL(state.pack.content.path, manifestResponse.url));
+    if (!dataResponse.ok) throw new Error("Không thể nạp dữ liệu từ vựng");
+    state.words = toWords(await dataResponse.text(), state.pack);
     if (!state.words.length) throw new Error("Du lieu tu vung trong");
-    $("#lesson-total").textContent = new Set(state.words.map((word) => word.lesson)).size;
-    renderLessons();
-    updateFlashcardCTA();
+    state.selectedUnit = sortUnits(new Set(state.words.map((word) => word.unit)))[0];
+    $("#lesson-total").textContent = new Set(state.words.map((word) => word.unit)).size;
+    setUnit(state.selectedUnit);
     updateOverview();
   } catch (error) {
     lessonGrid.innerHTML = `<p class="loading">Không thể nạp dữ liệu. Hãy mở trang qua một local server (ví dụ: <code>python -m http.server</code>).</p>`;
@@ -589,7 +626,7 @@ async function initialize() {
 
 lessonGrid.addEventListener("click", (event) => {
   const card = event.target.closest(".lesson-card");
-  if (card) setLesson(card.dataset.lesson);
+  if (card) setUnit(card.dataset.unit);
 });
 $("#mode-grid").addEventListener("click", (event) => {
   const card = event.target.closest(".mode-card");

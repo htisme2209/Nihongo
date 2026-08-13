@@ -1,61 +1,87 @@
 # Kotoba Dojo
 
-Ứng dụng web tĩnh để học từ vựng Minna no Nihongo theo từng bài, với giao diện tối ưu cho cả máy tính và điện thoại.
+Ứng dụng học từ vựng tiếng Nhật theo bài, xây dựng theo hướng cộng đồng và ưu tiên trải nghiệm điện thoại.
 
-> A static web app for learning Minna no Nihongo vocabulary lesson by lesson, optimized for both desktop and mobile devices.
+> A community-oriented Japanese vocabulary learning app with a mobile-first experience.
 
-## Chạy ứng dụng / Run the app
+## Bắt đầu nhanh / Quick start
 
-Tại thư mục dự án, chạy lệnh sau / From the project directory, run:
+Tại thư mục dự án, chạy / From the project directory, run:
 
 ```powershell
 python -m http.server 4173
 ```
 
-Sau đó mở `http://127.0.0.1:4173` trên trình duyệt.
+Mở `http://127.0.0.1:4173` trong trình duyệt. Local server là cần thiết để ứng dụng tải các gói dữ liệu CSV.
 
-Then open `http://127.0.0.1:4173` in your browser.
+Open `http://127.0.0.1:4173` in a browser. A local server is required because the app loads CSV data packs.
 
-Trang cần chạy qua local server để đọc dữ liệu CSV. / The app must run through a local server so it can load the CSV data.
+## Tính năng / Features
 
-## Dữ liệu / Data
+- **Flashcard**: lật thẻ, vuốt đổi thẻ, đánh dấu `Cần ôn` hoặc `Đã nhớ`.
+- **Hiragana**: xem nghĩa tiếng Việt và nhập cách đọc.
+- **Ghép Hán tự**: chạm các mảnh chữ xáo trộn để ghép đúng đáp án, gồm cả kana, dấu câu và ký tự lặp trong dữ liệu.
+- **Hán - Việt**: xem chữ tiếng Nhật và nhập âm Hán - Việt.
+- **Mobile-first**: màn học toàn màn hình trên điện thoại, vùng chạm lớn, hỗ trợ safe area và bàn phím ảo.
 
-- Tệp dữ liệu chính: `minna_bai1_25_nghia_dap_an_kanji_hanviet.csv`.
-- Bao gồm 25 bài và 1.064 mục từ vựng Minna no Nihongo.
-- Các mục không có đáp án phù hợp sẽ tự động được bỏ qua ở chế độ luyện tương ứng.
+- **Flashcards**: flip cards, swipe between words, and mark words as `Review` or `Known`.
+- **Hiragana**: read the Vietnamese meaning and type the Japanese reading.
+- **Kanji builder**: tap shuffled character tiles to assemble the exact answer, including kana, punctuation, and repeated characters in the source data.
+- **Sino-Vietnamese**: read Japanese text and type its Sino-Vietnamese reading.
+- **Mobile-first**: full-screen phone views, large touch targets, safe-area, and virtual-keyboard support.
 
-- Primary data file: `minna_bai1_25_nghia_dap_an_kanji_hanviet.csv`.
-- Includes 25 Minna no Nihongo lessons and 1,064 vocabulary entries.
-- Entries without a suitable answer are automatically skipped in the relevant learning mode.
+## Gói từ vựng cộng đồng / Community vocabulary packs
 
-## Chế độ học / Learning modes
+Mỗi gói là dữ liệu khai báo, không chạy JavaScript do người đóng góp cung cấp:
 
-- **Flashcard**: Chọn bài, chạm để lật thẻ, vuốt để chuyển thẻ và đánh dấu **Cần ôn** hoặc **Đã nhớ**.
-- **Hiragana**: Xem nghĩa tiếng Việt và nhập cách đọc tiếng Nhật.
-- **Hán tự / Kanji builder**: Xem nghĩa cùng cách đọc, sau đó chạm các mảnh chữ được xáo trộn để ghép đáp án đúng. Chế độ này hỗ trợ cả kana, dấu câu và ký tự lặp có trong dữ liệu.
-- **Hán - Việt**: Xem chữ Hán và nhập âm Hán - Việt.
+```text
+packs/
+  registry.json                # Danh sách gói được ứng dụng tải
+  your-pack/
+    manifest.json              # Metadata, quyền nội dung, ánh xạ cột
+    words.csv                  # Từ vựng của gói
+```
 
-- **Flashcards**: Select a lesson, tap to flip a card, swipe to move between cards, and mark each word as **Review** or **Known**.
-- **Hiragana**: Read the Vietnamese meaning and type the Japanese reading.
-- **Kanji builder**: Read the meaning and reading, then tap shuffled character tiles to assemble the exact answer. This mode supports kana, punctuation, and repeated characters from the source data.
-- **Sino-Vietnamese**: Read the Japanese text and type its Sino-Vietnamese reading.
+Ứng dụng tải theo luồng `registry.json → manifest.json → words.csv`. Điều này phù hợp với web tĩnh và cho phép cộng đồng thêm gói bằng pull request, không cần sửa logic luyện tập.
 
-## Tiến độ / Progress
+The app loads `registry.json → manifest.json → words.csv`. This works with static hosting and lets the community add packs through pull requests without changing learning logic.
 
-- Tiến độ bài luyện được lưu trong `localStorage` với khóa `kotoba-dojo-progress`.
-- Tiến độ flashcard được lưu riêng với khóa `kotoba-dojo-flashcard-progress`.
-- Dữ liệu chỉ được lưu trên trình duyệt đang dùng; xóa dữ liệu trang web/trình duyệt sẽ xóa tiến độ.
+Xem [định dạng gói dữ liệu](docs/pack-format.md) và [gói mẫu](packs/example-open-pack/) trước khi đóng góp.
 
-- Quiz progress is stored in `localStorage` under `kotoba-dojo-progress`.
-- Flashcard progress is stored separately under `kotoba-dojo-flashcard-progress`.
-- Data stays in the current browser; clearing browser or site data will remove the saved progress.
+See the [pack format](docs/pack-format.md) and [example pack](packs/example-open-pack/) before contributing.
 
-## Trải nghiệm điện thoại / Mobile experience
+## Đóng góp / Contributing
 
-- Danh sách bài cuộn ngang gọn để chọn bài nhanh.
-- Màn luyện tập và flashcard mở toàn màn hình trên điện thoại.
-- Các nút và vùng nhập liệu được thiết kế với kích thước chạm thân thiện.
+Chúng tôi hoan nghênh đóng góp về:
 
-- Lessons use a compact horizontal scroller for quicker selection.
-- Practice and flashcard views open full-screen on phones.
-- Controls and input areas use touch-friendly sizes.
+- Gói từ vựng có quyền sử dụng rõ ràng.
+- Sửa dữ liệu, bản dịch, giao diện và khả năng truy cập.
+- Tính năng hoặc chế độ luyện tập mới.
+- Tài liệu song ngữ Việt - Anh.
+
+We welcome contributions of:
+
+- Vocabulary packs with clear content rights.
+- Data corrections, translations, UI, and accessibility improvements.
+- New features or practice modes.
+- Vietnamese-English documentation.
+
+Đọc [CONTRIBUTING.md](CONTRIBUTING.md), [chính sách nội dung](docs/content-policy.md), và [quy tắc ứng xử](CODE_OF_CONDUCT.md). Báo lỗi bảo mật theo [SECURITY.md](SECURITY.md).
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md), the [content policy](docs/content-policy.md), and the [code of conduct](CODE_OF_CONDUCT.md). Report security issues according to [SECURITY.md](SECURITY.md).
+
+## Lưu tiến độ / Saved progress
+
+- Điểm luyện tập: `localStorage` key `kotoba-dojo-progress`.
+- Tiến độ flashcard: `localStorage` key `kotoba-dojo-flashcard-progress`.
+- Dữ liệu chỉ nằm trong trình duyệt hiện tại; xóa dữ liệu website sẽ xóa tiến độ.
+
+- Quiz progress: `localStorage` key `kotoba-dojo-progress`.
+- Flashcard progress: `localStorage` key `kotoba-dojo-flashcard-progress`.
+- Data remains in the current browser; clearing site data removes progress.
+
+## Bản quyền / Content rights
+
+Mã nguồn được cấp phép theo [MIT License](LICENSE). Dữ liệu từ vựng có thể có quyền riêng; không mặc định được cấp phép cùng mã nguồn. Mỗi gói phải ghi rõ nguồn và giấy phép trong `manifest.json`.
+
+The source code is licensed under the [MIT License](LICENSE). Vocabulary content may have separate rights and is not automatically licensed with the code. Every pack must declare its source and license in `manifest.json`.

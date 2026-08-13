@@ -1,0 +1,41 @@
+name: Đề xuất gói từ vựng / Vocabulary pack proposal
+description: Propose a community vocabulary pack with clear content rights
+title: "pack: "
+labels: ["vocabulary-pack"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Tên gói / Pack name
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Nguồn nội dung / Content source
+      description: Include a URL where possible.
+    validations:
+      required: true
+  - type: input
+    id: license
+    attributes:
+      label: Giấy phép / License
+      placeholder: CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0...
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Phạm vi / Scope
+      description: Language, level, number of entries, unit structure, and a sample row.
+    validations:
+      required: true
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Xác nhận quyền nội dung / Rights confirmation
+      options:
+        - label: I confirm that this content can be redistributed and modified under the declared license.
+          required: true
+        - label: I have read docs/content-policy.md.
+          required: true

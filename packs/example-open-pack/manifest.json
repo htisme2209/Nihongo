@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "example-open-pack",
+  "version": "0.1.0",
+  "title": {
+    "vi": "Gói ví dụ mở",
+    "en": "Open example pack"
+  },
+  "description": {
+    "vi": "Mẫu tối thiểu để đóng góp một gói từ vựng mới.",
+    "en": "A minimal template for contributing a new vocabulary pack."
+  },
+  "author": {
+    "name": "Your name or community name"
+  },
+  "license": "CC0-1.0",
+  "source": {
+    "name": "Describe the original source or state that the content is original",
+    "rightsStatus": "verified"
+  },
+  "content": {
+    "format": "csv",
+    "path": "words.csv",
+    "encoding": "utf-8",
+    "columns": {
+      "id": "id",
+      "unit": "unit",
+      "order": "order",
+      "meaning": "meaning_vi",
+      "reading": "reading_jp",
+      "written": "written_jp",
+      "sinoVietnamese": "sino_vietnamese"
+    }
+  },
+  "units": {
+    "kind": "lesson",
+    "label": {
+      "vi": "Bài",
+      "en": "Lesson"
+    }
+  },
+  "modes": [
+    "flashcard",
+    "hiragana",
+    "kanji-builder"
+  ],
+  "legacyProgressIds": false
+}
