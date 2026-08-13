@@ -148,6 +148,19 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
 #answer-form { display: flex; max-width: 560px; margin: 0 auto; gap: 10px; }
 #answer-input { min-width: 0; flex: 1; padding: 14px 15px; color: var(--ink); border: 1px solid var(--line); border-radius: 3px; background: #fffefa; font-size: 1.1rem; }
 #answer-input::placeholder { color: #9c9a90; }
+.kanji-builder { max-width: 560px; margin: 0 auto; }
+.kanji-answer { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 7px; min-height: 66px; padding: 11px; border: 1px dashed var(--moss); border-radius: 4px; background: #fffefa; }
+.kanji-answer:empty::before { color: #9c9a90; content: "Chạm chữ bên dưới để ghép đáp án"; font-size: .83rem; font-weight: 700; }
+.kanji-answer-token, .kanji-choice { display: grid; min-width: 45px; min-height: 45px; place-items: center; padding: 5px 9px; border-radius: 3px; font-family: var(--display); font-size: 1.46rem; line-height: 1; }
+.kanji-answer-token { color: var(--forest); border: 1px solid #aac1a6; background: #e1ebd9; }
+.kanji-builder-help { margin: 13px 0 10px; color: var(--moss); font-size: .75rem; font-weight: 700; }
+.kanji-choice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(48px, 1fr)); gap: 9px; }
+.kanji-choice { color: var(--ink); border: 1px solid var(--line); background: var(--paper-deep); transition: transform .15s ease, background .15s ease; }
+.kanji-choice:hover { border-color: var(--forest); transform: translateY(-2px); }
+.kanji-choice:disabled { opacity: .28; transform: none; cursor: default; }
+.kanji-builder-actions { display: flex; justify-content: center; gap: 10px; margin-top: 18px; }
+.kanji-builder-actions .secondary-button { min-height: 46px; }
+.kanji-builder-actions .primary-button:disabled { cursor: not-allowed; opacity: .48; transform: none; box-shadow: 0 2px 0 #af3626; }
 .hint-button { margin-top: 20px; color: var(--moss); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 4px; }
 .feedback { max-width: 560px; margin: 20px auto 0; padding: 16px; border-radius: 3px; background: var(--paper-deep); }
 .feedback.correct { background: #dfead9; }
@@ -261,6 +274,10 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   #answer-input, #check-button { width: 100%; }
   #answer-input { min-height: 54px; font-size: 16px; }
   #check-button { margin-top: 12px; }
+  .kanji-answer { min-height: 64px; }
+  .kanji-answer-token, .kanji-choice { min-width: 48px; min-height: 48px; font-size: 1.48rem; }
+  .kanji-builder-actions { display: grid; grid-template-columns: .72fr 1.28fr; }
+  .kanji-builder-actions .secondary-button, .kanji-builder-actions .primary-button { width: 100%; }
   .hint-button { min-height: 44px; margin-top: 14px; }
   .feedback { margin-top: 16px; padding: 16px; }
   .next-button { width: 100%; margin-top: 2px; }
@@ -303,6 +320,8 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .practice-actions { grid-template-columns: 1fr; }
   .question-count { min-height: 46px; }
   .question-count select { flex: 1; text-align: right; }
+  .kanji-choice-grid { gap: 7px; }
+  .kanji-answer-token, .kanji-choice { min-width: 45px; min-height: 45px; }
   .quiz-panel, .result-panel { padding-right: 19px; padding-left: 19px; }
   .review-item { align-items: flex-start; font-size: .78rem; }
   .review-item strong { max-width: 48%; text-align: right; overflow-wrap: anywhere; }

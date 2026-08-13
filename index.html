@@ -131,6 +131,15 @@
           <input id="answer-input" autocomplete="off" autocapitalize="none" enterkeyhint="done" spellcheck="false" placeholder="Nhập câu trả lời..." />
           <button class="primary-button" id="check-button" type="submit">Kiểm tra <span>↵</span></button>
         </form>
+        <section class="kanji-builder" id="kanji-builder" hidden aria-label="Ghép đáp án Hán tự">
+          <div class="kanji-answer" id="kanji-answer" aria-live="polite" aria-label="Đáp án đang ghép"></div>
+          <p class="kanji-builder-help">Chạm các ô theo đúng thứ tự để ghép đáp án.</p>
+          <div class="kanji-choice-grid" id="kanji-choice-grid" aria-label="Các chữ để chọn"></div>
+          <div class="kanji-builder-actions">
+            <button class="secondary-button" id="kanji-clear-button" type="button">Xóa hết</button>
+            <button class="primary-button" id="kanji-check-button" type="button" disabled>Kiểm tra <span>→</span></button>
+          </div>
+        </section>
         <div class="feedback" id="feedback" hidden>
           <div class="feedback-title" id="feedback-title"></div>
           <p id="answer-reveal"></p>

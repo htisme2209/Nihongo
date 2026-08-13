@@ -13,7 +13,7 @@ const modes = {
   },
   kanji: {
     label: "HAN TU",
-    description: "Nhìn nghĩa và cách đọc, nhớ Hán tự.",
+    description: "Nhìn nghĩa và cách đọc, chạm các mảnh chữ để ghép đáp án.",
     promptLabel: "NGHĨA TIẾNG VIỆT",
     answerLabel: "Hán tự",
     answer: (word) => word.kanji,
@@ -40,6 +40,8 @@ const state = {
   score: 0,
   answered: false,
   incorrect: [],
+  kanjiChoices: [],
+  selectedKanjiChoiceIds: [],
 };
 
 const flashcardState = {
@@ -211,6 +213,94 @@ function shuffled(items) {
   return [...items].sort(() => Math.random() - 0.5);
 }
 
+function kanjiTokens(value) {
+  if (typeof Intl.Segmenter === "function") {
+    return [...new Intl.Segmenter("ja", { granularity: "grapheme" }).segment(value || "")]
+      .map((segment) => segment.segment);
+  }
+  return Array.from(value || "");
+}
+
+function displayChoiceToken(token) {
+  return token === " " ? "␠" : token;
+}
+
+function isKanjiMode() {
+  return state.selectedMode === "kanji";
+}
+
+function buildKanjiChoices(word) {
+  const answerTokens = kanjiTokens(word.kanji);
+  const usedTokens = new Set(answerTokens);
+  const lessonTokens = state.words
+    .filter((item) => item.lesson === state.selectedLesson && item.kanji)
+    .flatMap((item) => kanjiTokens(item.kanji))
+    .filter((token) => /^\p{Script=Han}$/u.test(token) && !usedTokens.has(token));
+  const distractorCount = answerTokens.length > 10 ? 2 : 4;
+  const distractors = shuffled([...new Set(lessonTokens)]).slice(0, distractorCount);
+  const choices = [...answerTokens, ...distractors].map((token, index) => ({
+    id: `kanji-choice-${index}`,
+    token,
+  }));
+  state.kanjiChoices = shuffled(choices);
+  state.selectedKanjiChoiceIds = [];
+}
+
+function selectedKanjiAnswer() {
+  return state.selectedKanjiChoiceIds
+    .map((id) => state.kanjiChoices.find((choice) => choice.id === id)?.token || "")
+    .join("");
+}
+
+function renderKanjiBuilder() {
+  const answer = $("#kanji-answer");
+  const grid = $("#kanji-choice-grid");
+  const selectedIds = new Set(state.selectedKanjiChoiceIds);
+  const expectedLength = kanjiTokens(state.queue[state.index]?.kanji).length;
+  answer.textContent = "";
+  grid.textContent = "";
+
+  state.selectedKanjiChoiceIds.forEach((id, selectionIndex) => {
+    const choice = state.kanjiChoices.find((item) => item.id === id);
+    if (!choice) return;
+    const token = document.createElement("button");
+    token.className = "kanji-answer-token";
+    token.type = "button";
+    token.textContent = displayChoiceToken(choice.token);
+    token.setAttribute("aria-label", `Bỏ ký tự ${choice.token || "khoảng trắng"} khỏi đáp án`);
+    token.disabled = state.answered;
+    token.addEventListener("click", () => {
+      state.selectedKanjiChoiceIds.splice(selectionIndex, 1);
+      renderKanjiBuilder();
+    });
+    answer.append(token);
+  });
+
+  state.kanjiChoices.forEach((choice) => {
+    const button = document.createElement("button");
+    button.className = "kanji-choice";
+    button.type = "button";
+    button.textContent = displayChoiceToken(choice.token);
+    button.setAttribute("aria-label", `Chọn ký tự ${choice.token || "khoảng trắng"}`);
+    button.disabled = state.answered || selectedIds.has(choice.id) || state.selectedKanjiChoiceIds.length >= expectedLength;
+    button.addEventListener("click", () => {
+      if (state.selectedKanjiChoiceIds.length >= expectedLength) return;
+      state.selectedKanjiChoiceIds.push(choice.id);
+      renderKanjiBuilder();
+    });
+    grid.append(button);
+  });
+
+  $("#kanji-check-button").disabled = state.answered || state.selectedKanjiChoiceIds.length !== expectedLength;
+  $("#kanji-clear-button").disabled = state.answered || state.selectedKanjiChoiceIds.length === 0;
+}
+
+function clearKanjiAnswer() {
+  if (state.answered) return;
+  state.selectedKanjiChoiceIds = [];
+  renderKanjiBuilder();
+}
+
 function flashcardWords() {
   return state.words.filter((word) => word.lesson === state.selectedLesson && (word.kanji || word.hiragana));
 }
@@ -354,6 +444,7 @@ function startPractice(words = null) {
 function renderQuestion() {
   const word = state.queue[state.index];
   const mode = modes[state.selectedMode];
+  const usesKanjiBuilder = isKanjiMode();
   state.answered = false;
   $("#progress-text").textContent = `Câu ${state.index + 1} / ${state.queue.length}`;
   $("#progress-bar").style.width = `${(state.index / state.queue.length) * 100}%`;
@@ -362,17 +453,23 @@ function renderQuestion() {
   $("#prompt-label").textContent = mode.promptLabel;
   $("#practice-title").textContent = mode.prompt(word);
   $("#question-support").textContent = mode.support(word);
+  $("#answer-form").hidden = usesKanjiBuilder;
+  $("#kanji-builder").hidden = !usesKanjiBuilder;
   $("#answer-input").value = "";
   $("#answer-input").placeholder = `Nhập ${mode.answerLabel.toLocaleLowerCase("vi-VN")}...`;
   $("#answer-input").disabled = false;
   $("#check-button").hidden = false;
   $("#feedback").hidden = true;
   $("#hint-button").hidden = false;
+  if (usesKanjiBuilder) {
+    buildKanjiChoices(word);
+    renderKanjiBuilder();
+  }
   requestAnimationFrame(() => {
-    const input = $("#answer-input");
-    input.focus({ preventScroll: true });
+    const focusTarget = usesKanjiBuilder ? $("#kanji-choice-grid button") : $("#answer-input");
+    focusTarget?.focus({ preventScroll: true });
     if (window.matchMedia("(max-width: 760px)").matches) {
-      input.scrollIntoView({ behavior: "smooth", block: "center" });
+      (usesKanjiBuilder ? $("#kanji-builder") : $("#answer-input")).scrollIntoView({ behavior: "smooth", block: "center" });
     }
   });
 }
@@ -384,9 +481,19 @@ function revealAnswer() {
   state.answered = true;
   state.incorrect.push(word);
   saveProgress(word.id, false);
-  $("#answer-input").value = mode.answer(word);
-  $("#answer-input").disabled = true;
-  $("#check-button").hidden = true;
+  if (isKanjiMode()) {
+    // Rebuild in exact order, including duplicate characters.
+    const remaining = [...state.kanjiChoices];
+    state.selectedKanjiChoiceIds = kanjiTokens(word.kanji).map((token) => {
+      const foundIndex = remaining.findIndex((choice) => choice.token === token);
+      return remaining.splice(foundIndex, 1)[0].id;
+    });
+    renderKanjiBuilder();
+  } else {
+    $("#answer-input").value = mode.answer(word);
+    $("#answer-input").disabled = true;
+    $("#check-button").hidden = true;
+  }
   $("#hint-button").hidden = true;
   const feedback = $("#feedback");
   feedback.hidden = false;
@@ -396,18 +503,24 @@ function revealAnswer() {
   $("#next-button").focus();
 }
 
-function checkAnswer() {
+function checkAnswer(answer = $("#answer-input").value) {
   if (state.answered) return;
   const word = state.queue[state.index];
   const mode = modes[state.selectedMode];
-  const correct = normalize($("#answer-input").value) === normalize(mode.answer(word));
+  const correct = isKanjiMode()
+    ? answer === mode.answer(word)
+    : normalize(answer) === normalize(mode.answer(word));
   state.answered = true;
   saveProgress(word.id, correct);
   if (correct) state.score += 1;
   else state.incorrect.push(word);
 
-  $("#answer-input").disabled = true;
-  $("#check-button").hidden = true;
+  if (isKanjiMode()) {
+    renderKanjiBuilder();
+  } else {
+    $("#answer-input").disabled = true;
+    $("#check-button").hidden = true;
+  }
   const feedback = $("#feedback");
   feedback.hidden = false;
   feedback.className = `feedback ${correct ? "correct" : "incorrect"}`;
@@ -486,6 +599,8 @@ $("#start-button").addEventListener("click", () => startPractice());
 $("#continue-button").addEventListener("click", () => startPractice());
 $("#start-flashcards").addEventListener("click", () => startFlashcards());
 $("#answer-form").addEventListener("submit", (event) => { event.preventDefault(); checkAnswer(); });
+$("#kanji-check-button").addEventListener("click", () => checkAnswer(selectedKanjiAnswer()));
+$("#kanji-clear-button").addEventListener("click", clearKanjiAnswer);
 $("#hint-button").addEventListener("click", revealAnswer);
 $("#next-button").addEventListener("click", nextQuestion);
 $("#close-practice").addEventListener("click", closePractice);
