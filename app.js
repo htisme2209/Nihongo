@@ -1,5 +1,7 @@
 const PACK_REGISTRY_URL = "packs/registry.json";
 const FLASHCARD_STORAGE_KEY = "kotoba-dojo-flashcard-progress";
+const FLAGGED_WORDS_STORAGE_KEY = "kotoba-dojo-flagged-words-v1";
+const FLAGGED_WORDS_STORAGE_VERSION = 1;
 
 const modes = {
   hiragana: {
@@ -44,6 +46,7 @@ const state = {
   incorrect: [],
   kanjiChoices: [],
   selectedKanjiChoiceIds: [],
+  flaggedWords: new Map(),
 };
 
 const flashcardState = {
@@ -52,12 +55,14 @@ const flashcardState = {
   isFlipped: false,
   knownIds: new Set(),
   reviewIds: new Set(),
+  label: "",
 };
 
 const $ = (selector) => document.querySelector(selector);
 const lessonGrid = $("#lesson-grid");
 const dialog = $("#practice-dialog");
 const flashcardDialog = $("#flashcard-dialog");
+const flaggedWordsDialog = $("#flagged-words-dialog");
 const flashcardCard = $("#flashcard-card");
 let flashcardPointerStart = null;
 let ignoreFlashcardClick = false;
@@ -154,6 +159,179 @@ function saveFlashcardProgress(id, outcome) {
   record.lastSeen = new Date().toISOString();
   progress[id] = record;
   localStorage.setItem(FLASHCARD_STORAGE_KEY, JSON.stringify(progress));
+}
+
+function flaggedWordKey(word) {
+  return `${word.packId}\u0000${word.sourceId}`;
+}
+
+function readFlaggedWords() {
+  const flaggedWords = new Map();
+  try {
+    const saved = JSON.parse(localStorage.getItem(FLAGGED_WORDS_STORAGE_KEY));
+    if (saved?.version === FLAGGED_WORDS_STORAGE_VERSION && Array.isArray(saved.items)) {
+      saved.items.forEach((item) => {
+        if (!item || typeof item.packId !== "string" || typeof item.sourceId !== "string") return;
+        const record = {
+          packId: item.packId,
+          sourceId: item.sourceId,
+          flaggedAt: typeof item.flaggedAt === "string" ? item.flaggedAt : "",
+        };
+        flaggedWords.set(`${record.packId}\u0000${record.sourceId}`, record);
+      });
+    }
+  } catch {
+    // Ignore invalid or unavailable browser storage.
+    return null;
+  }
+  return flaggedWords;
+}
+
+function loadFlaggedWords() {
+  const flaggedWords = readFlaggedWords();
+  if (flaggedWords) state.flaggedWords = flaggedWords;
+}
+
+function saveFlaggedWords() {
+  const items = [...state.flaggedWords.values()];
+  try {
+    localStorage.setItem(FLAGGED_WORDS_STORAGE_KEY, JSON.stringify({ version: FLAGGED_WORDS_STORAGE_VERSION, items }));
+  } catch {
+    // Keep the current session usable when browser storage is unavailable.
+  }
+}
+
+function isWordFlagged(word) {
+  return Boolean(word && state.flaggedWords.has(flaggedWordKey(word)));
+}
+
+function getFlaggedWords() {
+  return state.words
+    .filter((word) => isWordFlagged(word))
+    .sort((left, right) => {
+      const leftRecord = state.flaggedWords.get(flaggedWordKey(left));
+      const rightRecord = state.flaggedWords.get(flaggedWordKey(right));
+      const dateOrder = (rightRecord?.flaggedAt || "").localeCompare(leftRecord?.flaggedAt || "");
+      return dateOrder || left.unit.localeCompare(right.unit, "vi", { numeric: true }) || left.order - right.order;
+    });
+}
+
+function renderFlagToggle(button, word) {
+  const flagged = isWordFlagged(word);
+  button.disabled = !word;
+  button.classList.toggle("is-flagged", flagged);
+  button.setAttribute("aria-pressed", String(flagged));
+  button.textContent = flagged ? "Bỏ gắn cờ" : "Gắn cờ từ này";
+}
+
+function renderFlagToggles() {
+  renderFlagToggle($("#toggle-practice-flag"), state.queue[state.index]);
+  renderFlagToggle($("#toggle-flashcard-flag"), flashcardState.deck[flashcardState.index]);
+}
+
+function renderFlaggedWords() {
+  const words = getFlaggedWords();
+  const count = words.length;
+  const list = $("#flagged-words-list");
+  const startButton = $("#start-flagged-flashcards");
+  const canStartFlashcards = words.some((word) => word.kanji || word.hiragana);
+
+  $("#flagged-words-count").textContent = count;
+  $("#flagged-words-dialog-count").textContent = count;
+  $("#open-flagged-words").setAttribute("aria-label", count
+    ? `Mở danh sách ${count} từ đã gắn cờ`
+    : "Mở danh sách từ đã gắn cờ");
+  $("#flagged-words-copy").textContent = count
+    ? `${count} từ được lưu để bạn quay lại đúng lúc cần ôn.`
+    : "Chưa có từ nào được gắn cờ. Khi học, hãy lưu từ muốn quay lại ôn sau.";
+  startButton.disabled = !canStartFlashcards;
+  list.textContent = "";
+
+  if (!count) {
+    const empty = document.createElement("p");
+    empty.className = "flagged-words-empty";
+    empty.textContent = "Danh sách này sẽ hiện các từ bạn đã gắn cờ.";
+    list.append(empty);
+    return;
+  }
+
+  const entries = document.createElement("ul");
+  entries.className = "flagged-word-items";
+  words.forEach((word, index) => {
+    const item = document.createElement("li");
+    item.className = "flagged-word-item";
+    const content = document.createElement("div");
+    content.className = "flagged-word-content";
+    const japanese = document.createElement("strong");
+    japanese.className = "flagged-word-japanese";
+    japanese.textContent = flashcardFrontText(word);
+    const reading = document.createElement("span");
+    reading.className = "flagged-word-reading";
+    reading.textContent = word.kanji && word.hiragana ? word.hiragana : "";
+    reading.hidden = !reading.textContent;
+    const meaning = document.createElement("span");
+    meaning.className = "flagged-word-meaning";
+    meaning.textContent = word.meaning;
+    content.append(japanese, reading, meaning);
+
+    const actions = document.createElement("div");
+    actions.className = "flagged-word-actions";
+    const lesson = document.createElement("span");
+    lesson.className = "flagged-word-lesson";
+    lesson.textContent = displayUnit(word.unit);
+    const remove = document.createElement("button");
+    remove.className = "flagged-word-remove";
+    remove.type = "button";
+    remove.textContent = "Bỏ cờ";
+    remove.setAttribute("aria-label", `Bỏ gắn cờ từ: ${word.meaning}`);
+    remove.addEventListener("click", () => toggleWordFlag(word, () => focusFlaggedWordAction(index)));
+    actions.append(lesson, remove);
+    item.append(content, actions);
+    entries.append(item);
+  });
+  list.append(entries);
+}
+
+function focusFlaggedWordAction(index) {
+  const buttons = [...$("#flagged-words-list").querySelectorAll(".flagged-word-remove")];
+  const fallback = $("#start-flagged-flashcards").disabled ? $("#close-flagged-words") : $("#start-flagged-flashcards");
+  (buttons[Math.min(index, buttons.length - 1)] || fallback).focus();
+}
+
+function toggleWordFlag(word, afterRender = null) {
+  if (!word) return;
+  // Refresh first so another tab's latest saved flags are not overwritten.
+  loadFlaggedWords();
+  const key = flaggedWordKey(word);
+  if (state.flaggedWords.has(key)) {
+    state.flaggedWords.delete(key);
+  } else {
+    state.flaggedWords.set(key, {
+      packId: word.packId,
+      sourceId: word.sourceId,
+      flaggedAt: new Date().toISOString(),
+    });
+  }
+  saveFlaggedWords();
+  renderFlaggedWords();
+  renderFlagToggles();
+  afterRender?.();
+}
+
+function openFlaggedWords() {
+  renderFlaggedWords();
+  if (!flaggedWordsDialog.open) flaggedWordsDialog.showModal();
+}
+
+function closeFlaggedWords() {
+  flaggedWordsDialog.close();
+}
+
+function startFlaggedFlashcards() {
+  const words = getFlaggedWords().filter((word) => word.kanji || word.hiragana);
+  if (!words.length) return;
+  closeFlaggedWords();
+  startFlashcards(words, "Từ đã gắn cờ");
 }
 
 function unitLabel() {
@@ -354,7 +532,7 @@ function renderFlashcard() {
   const detail = [word.kanji, word.hiragana].filter(Boolean).join("  ·  ");
   const hanViet = $("#flashcard-hanviet");
 
-  $("#flashcard-progress-text").textContent = `${displayUnit(state.selectedUnit)} · Thẻ ${flashcardState.index + 1} / ${flashcardState.deck.length}`;
+  $("#flashcard-progress-text").textContent = `${flashcardState.label || displayUnit(state.selectedUnit)} · Thẻ ${flashcardState.index + 1} / ${flashcardState.deck.length}`;
   $("#flashcard-progress-bar").style.width = `${((flashcardState.index + 1) / flashcardState.deck.length) * 100}%`;
   $("#flashcard-primary").textContent = primary;
   $("#flashcard-reading").textContent = reading;
@@ -367,9 +545,10 @@ function renderFlashcard() {
   flashcardCard.setAttribute("aria-pressed", flashcardState.isFlipped);
   flashcardCard.setAttribute("aria-label", flashcardState.isFlipped ? "Đang hiển thị đáp án. Chạm để lật lại." : "Chạm để lật thẻ và xem nghĩa.");
   $("#flashcard-previous").disabled = flashcardState.index === 0;
+  renderFlagToggle($("#toggle-flashcard-flag"), word);
 }
 
-function startFlashcards(words = null) {
+function startFlashcards(words = null, label = null) {
   const candidates = words || flashcardWords();
   if (!candidates.length) {
     alert("Bài này chưa có dữ liệu phù hợp để tạo flashcard.");
@@ -380,6 +559,7 @@ function startFlashcards(words = null) {
   flashcardState.isFlipped = false;
   flashcardState.knownIds = new Set();
   flashcardState.reviewIds = new Set();
+  flashcardState.label = label || displayUnit(state.selectedUnit);
   $("#flashcard-panel").hidden = false;
   $("#flashcard-result").hidden = true;
   if (!flashcardDialog.open) flashcardDialog.showModal();
@@ -490,6 +670,7 @@ function renderQuestion() {
   $("#check-button").hidden = false;
   $("#feedback").hidden = true;
   $("#hint-button").hidden = false;
+  renderFlagToggle($("#toggle-practice-flag"), word);
   if (usesKanjiBuilder) {
     buildKanjiChoices(word);
     renderKanjiBuilder();
@@ -614,10 +795,12 @@ async function initialize() {
     if (!dataResponse.ok) throw new Error("Không thể nạp dữ liệu từ vựng");
     state.words = toWords(await dataResponse.text(), state.pack);
     if (!state.words.length) throw new Error("Du lieu tu vung trong");
+    loadFlaggedWords();
     state.selectedUnit = sortUnits(new Set(state.words.map((word) => word.unit)))[0];
     $("#lesson-total").textContent = new Set(state.words.map((word) => word.unit)).size;
     setUnit(state.selectedUnit);
     updateOverview();
+    renderFlaggedWords();
   } catch (error) {
     lessonGrid.innerHTML = `<p class="loading">Không thể nạp dữ liệu. Hãy mở trang qua một local server (ví dụ: <code>python -m http.server</code>).</p>`;
     console.error(error);
@@ -635,10 +818,15 @@ $("#mode-grid").addEventListener("click", (event) => {
 $("#start-button").addEventListener("click", () => startPractice());
 $("#continue-button").addEventListener("click", () => startPractice());
 $("#start-flashcards").addEventListener("click", () => startFlashcards());
+$("#open-flagged-words").addEventListener("click", openFlaggedWords);
+$("#close-flagged-words").addEventListener("click", closeFlaggedWords);
+$("#start-flagged-flashcards").addEventListener("click", startFlaggedFlashcards);
+flaggedWordsDialog.addEventListener("click", (event) => { if (event.target === flaggedWordsDialog) closeFlaggedWords(); });
 $("#answer-form").addEventListener("submit", (event) => { event.preventDefault(); checkAnswer(); });
 $("#kanji-check-button").addEventListener("click", () => checkAnswer(selectedKanjiAnswer()));
 $("#kanji-clear-button").addEventListener("click", clearKanjiAnswer);
 $("#hint-button").addEventListener("click", revealAnswer);
+$("#toggle-practice-flag").addEventListener("click", () => toggleWordFlag(state.queue[state.index]));
 $("#next-button").addEventListener("click", nextQuestion);
 $("#close-practice").addEventListener("click", closePractice);
 $("#finish-button").addEventListener("click", closePractice);
@@ -670,13 +858,21 @@ flashcardCard.addEventListener("pointercancel", () => { flashcardPointerStart = 
 $("#flashcard-previous").addEventListener("click", () => moveFlashcard(-1));
 $("#flashcard-review").addEventListener("click", () => markFlashcard("review"));
 $("#flashcard-known").addEventListener("click", () => markFlashcard("known"));
+$("#toggle-flashcard-flag").addEventListener("click", () => toggleWordFlag(flashcardState.deck[flashcardState.index]));
 $("#shuffle-flashcards").addEventListener("click", shuffleFlashcards);
 $("#close-flashcards").addEventListener("click", closeFlashcards);
 $("#finish-flashcards").addEventListener("click", closeFlashcards);
 $("#retry-flashcards").addEventListener("click", () => {
   const reviewWords = flashcardState.deck.filter((word) => flashcardState.reviewIds.has(word.id));
-  startFlashcards(reviewWords.length ? reviewWords : flashcardState.deck);
+  startFlashcards(reviewWords.length ? reviewWords : flashcardState.deck, flashcardState.label);
 });
 flashcardDialog.addEventListener("click", (event) => { if (event.target === flashcardDialog) closeFlashcards(); });
+
+window.addEventListener("storage", (event) => {
+  if (event.key !== FLAGGED_WORDS_STORAGE_KEY && event.key !== null) return;
+  loadFlaggedWords();
+  renderFlaggedWords();
+  renderFlagToggles();
+});
 
 initialize();

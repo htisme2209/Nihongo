@@ -65,7 +65,9 @@ h1 { position: relative; z-index: 1; max-width: 700px; margin-bottom: 20px; font
 h1 em { color: var(--sun); font-style: italic; }
 .hero-copy { position: relative; z-index: 1; max-width: 470px; margin-bottom: 34px; color: #dae6d7; font-size: 1.02rem; line-height: 1.65; }
 .hero-stats { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 26px; }
-.hero-stats div { min-width: 90px; padding-left: 14px; border-left: 1px solid rgb(255 253 247 / 30%); }
+.hero-stats div, .hero-saved-words { min-width: 90px; min-height: 44px; padding-left: 14px; border-left: 1px solid rgb(255 253 247 / 30%); }
+.hero-saved-words { color: var(--cream); border-top: 0; border-right: 0; border-bottom: 0; background: transparent; text-align: left; transition: color .18s ease; }
+.hero-saved-words:hover, .hero-saved-words:hover span { color: var(--sun); }
 .hero-stats strong, .hero-stats span { display: block; }
 .hero-stats strong { font-family: var(--display); font-size: 2rem; font-weight: 500; }
 .hero-stats span { color: #c5d5c2; font-size: .72rem; font-weight: 700; }
@@ -162,6 +164,12 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
 .kanji-builder-actions .secondary-button { min-height: 46px; }
 .kanji-builder-actions .primary-button:disabled { cursor: not-allowed; opacity: .48; transform: none; box-shadow: 0 2px 0 #af3626; }
 .hint-button { margin-top: 20px; color: var(--moss); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 4px; }
+.quiz-utilities { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 20px; }
+.quiz-utilities .hint-button { margin-top: 0; }
+.flag-toggle-button { min-height: 42px; padding: 8px 12px; color: var(--forest); border: 1px dashed var(--moss); border-radius: 3px; background: transparent; font-size: .75rem; font-weight: 900; transition: color .18s ease, border-color .18s ease, background .18s ease; }
+.flag-toggle-button:hover { border-color: var(--tomato); background: #fff4eb; }
+.flag-toggle-button.is-flagged { color: #913523; border-color: #d68e77; border-style: solid; background: #f7dfd5; }
+.flag-toggle-button:disabled { cursor: not-allowed; opacity: .45; }
 .feedback { max-width: 560px; margin: 20px auto 0; padding: 16px; border-radius: 3px; background: var(--paper-deep); }
 .feedback.correct { background: #dfead9; }
 .feedback.incorrect { background: #f8ded5; }
@@ -206,6 +214,7 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
 .flashcard-help { margin: 17px 0; color: var(--moss); font-size: .72rem; font-weight: 700; }
 .flashcard-actions { display: grid; grid-template-columns: 58px 1fr 1fr; width: min(510px, 100%); margin: 0 auto; gap: 9px; }
 .flashcard-actions button { min-height: 52px; border-radius: 3px; font-weight: 900; }
+.flashcard-flag { display: block; width: min(510px, 100%); min-height: 44px; margin: 10px auto 0; }
 .flashcard-previous { color: var(--forest); border: 1px solid var(--line); background: var(--cream); font-size: 1.2rem; }
 .flashcard-previous:disabled { opacity: .38; cursor: not-allowed; }
 .flashcard-review { color: #913523; border: 1px solid #e6b09e; background: #f7dfd5; }
@@ -216,6 +225,29 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
 .flashcard-result h2 { margin-bottom: 13px; }
 .flashcard-result > p:not(.eyebrow):not(.flashcard-result-number) { max-width: 430px; margin: 0 auto 27px; color: var(--moss); line-height: 1.55; }
 .flashcard-result-actions { display: flex; justify-content: center; gap: 12px; }
+
+.flagged-words-dialog { width: min(700px, calc(100% - 28px)); min-height: min(560px, calc(100dvh - 28px)); max-height: calc(100dvh - 28px); padding: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; color: var(--ink); border: 0; border-radius: 5px 52px 5px 5px; background: var(--cream); box-shadow: 0 28px 100px rgb(11 26 18 / 45%); }
+.flagged-words-dialog::backdrop { background: rgb(18 35 27 / 65%); backdrop-filter: blur(3px); }
+.flagged-words-topbar { position: sticky; z-index: 2; top: 0; display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 14px; min-height: 92px; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--cream); }
+.flagged-words-topbar .eyebrow { margin-bottom: 5px; }
+.flagged-words-topbar h2 { font-size: 1.7rem; }
+.flagged-words-total { justify-self: end; padding: 7px 9px; color: #884130; border: 1px solid #dcac91; border-radius: 999px; background: #f7dfcf; font-size: .7rem; font-weight: 900; white-space: nowrap; }
+.flagged-words-panel { padding: clamp(25px, 5vw, 42px); }
+.flagged-words-copy { margin-bottom: 18px; color: var(--moss); font-size: .86rem; font-weight: 700; line-height: 1.5; }
+.flagged-words-list { max-height: min(390px, calc(100dvh - 340px)); overflow-y: auto; overscroll-behavior: contain; padding-right: 4px; }
+.flagged-words-empty { margin: 0; padding: 24px 18px; color: var(--moss); border: 1px dashed var(--line); border-radius: 3px; text-align: center; font-size: .84rem; font-weight: 700; line-height: 1.5; }
+.flagged-word-items { display: grid; gap: 8px; padding: 0; margin: 0; list-style: none; }
+.flagged-word-item { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 3px; background: #fffefa; }
+.flagged-word-content { min-width: 0; }
+.flagged-word-japanese, .flagged-word-reading, .flagged-word-meaning { display: block; overflow-wrap: anywhere; }
+.flagged-word-japanese { color: var(--forest); font-family: var(--display); font-size: 1.4rem; line-height: 1; }
+.flagged-word-reading { margin-top: 4px; color: var(--moss); font-size: .76rem; font-weight: 800; }
+.flagged-word-meaning { margin-top: 5px; font-size: .78rem; font-weight: 700; }
+.flagged-word-actions { display: grid; justify-items: end; gap: 8px; flex: 0 0 auto; }
+.flagged-word-lesson { color: var(--moss); font-size: .67rem; font-weight: 900; text-transform: uppercase; }
+.flagged-word-remove { min-height: 34px; padding: 6px 9px; color: #913523; border: 1px solid #e6b09e; border-radius: 3px; background: #f7dfd5; font-size: .7rem; font-weight: 900; }
+#start-flagged-flashcards { display: block; margin: 24px auto 0; }
+#start-flagged-flashcards:disabled { cursor: not-allowed; opacity: .48; transform: none; box-shadow: 0 2px 0 #af3626; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 @media (hover: none) {
@@ -232,7 +264,7 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .hero { padding: 42px 28px; border-radius: 3px 42px 3px 3px; }
   .hero-copy { margin-bottom: 29px; }
   .hero-stats { gap: 15px; }
-  .hero-stats div { min-width: 82px; padding-left: 10px; }
+  .hero-stats div, .hero-saved-words { min-width: 82px; padding-left: 10px; }
   .content-section { margin-top: 52px; }
   .section-heading { align-items: flex-start; }
   .section-heading .text-button { padding-top: 7px; white-space: nowrap; }
@@ -279,6 +311,9 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .kanji-builder-actions { display: grid; grid-template-columns: .72fr 1.28fr; }
   .kanji-builder-actions .secondary-button, .kanji-builder-actions .primary-button { width: 100%; }
   .hint-button { min-height: 44px; margin-top: 14px; }
+  .quiz-utilities { gap: 14px; margin-top: 14px; }
+  .quiz-utilities .hint-button { margin-top: 0; }
+  .flag-toggle-button { min-height: 44px; }
   .feedback { margin-top: 16px; padding: 16px; }
   .next-button { width: 100%; margin-top: 2px; }
   .result-actions { display: grid; width: 100%; }
@@ -293,6 +328,11 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .flashcard-actions button { min-height: 54px; }
   .flashcard-result-actions { display: grid; width: 100%; }
   .flashcard-result-actions .secondary-button, .flashcard-result-actions .primary-button { width: 100%; }
+  .flagged-words-dialog { max-height: calc(100dvh - 18px); overflow-y: auto; overscroll-behavior: contain; }
+  .flagged-words-topbar { position: sticky; z-index: 2; top: 0; grid-template-columns: 44px minmax(0, 1fr) auto; min-height: 76px; padding: 12px 14px; background: var(--cream); }
+  .flagged-words-panel { padding: 28px 24px; }
+  .flagged-words-list { max-height: min(400px, calc(100dvh - 255px)); }
+  #start-flagged-flashcards { width: 100%; }
 }
 
 @media (max-width: 600px) {
@@ -302,6 +342,10 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .flashcard-dialog { width: 100%; min-height: 100dvh; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; }
   .flashcard-topbar { min-height: calc(68px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); }
   .flashcard-panel, .flashcard-result { min-height: calc(100dvh - 68px - env(safe-area-inset-top)); padding-bottom: calc(32px + env(safe-area-inset-bottom)); }
+  .flagged-words-dialog { width: 100%; min-height: 100dvh; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; }
+  .flagged-words-topbar { min-height: calc(76px + env(safe-area-inset-top)); padding-top: calc(12px + env(safe-area-inset-top)); }
+  .flagged-words-panel { min-height: calc(100dvh - 76px - env(safe-area-inset-top)); padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+  .flagged-words-list { max-height: calc(100dvh - 260px - env(safe-area-inset-top)); }
 }
 
 @media (max-width: 430px) {
@@ -320,6 +364,8 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .practice-actions { grid-template-columns: 1fr; }
   .question-count { min-height: 46px; }
   .question-count select { flex: 1; text-align: right; }
+  .quiz-utilities { display: grid; gap: 8px; }
+  .quiz-utilities .flag-toggle-button, .quiz-utilities .hint-button { width: 100%; }
   .kanji-choice-grid { gap: 7px; }
   .kanji-answer-token, .kanji-choice { min-width: 45px; min-height: 45px; }
   .quiz-panel, .result-panel { padding-right: 19px; padding-left: 19px; }
@@ -329,6 +375,8 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .flashcard-scene { min-height: min(355px, 47dvh); }
   .flashcard-primary { font-size: clamp(3.6rem, 20vw, 5.2rem); }
   .flashcard-help { margin: 13px 0; }
+  .flagged-word-item { align-items: flex-start; gap: 12px; }
+  .flagged-word-actions { gap: 7px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

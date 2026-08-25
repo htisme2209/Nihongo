@@ -34,6 +34,9 @@
           <div><strong id="mastered-total">0</strong><span>từ đã thuộc</span></div>
           <div><strong id="studied-total">0</strong><span>từ đã luyện</span></div>
           <div><strong id="lesson-total">0</strong><span>bài có sẵn</span></div>
+          <button class="hero-saved-words" id="open-flagged-words" type="button" aria-label="Mở danh sách từ đã gắn cờ">
+            <strong id="flagged-words-count">0</strong><span>từ đã gắn cờ</span>
+          </button>
         </div>
       </section>
 
@@ -145,7 +148,10 @@
           <p id="answer-reveal"></p>
           <button class="next-button" id="next-button" type="button">Câu tiếp theo <span>→</span></button>
         </div>
-        <button class="hint-button" id="hint-button" type="button">Hiện đáp án</button>
+        <div class="quiz-utilities">
+          <button class="flag-toggle-button" id="toggle-practice-flag" type="button" aria-pressed="false">Gắn cờ từ này</button>
+          <button class="hint-button" id="hint-button" type="button">Hiện đáp án</button>
+        </div>
       </section>
 
       <section class="result-panel" id="result-panel" hidden>
@@ -196,6 +202,7 @@
           <button class="flashcard-review" id="flashcard-review" type="button">Cần ôn</button>
           <button class="flashcard-known" id="flashcard-known" type="button">Đã nhớ</button>
         </div>
+        <button class="flag-toggle-button flashcard-flag" id="toggle-flashcard-flag" type="button" aria-pressed="false">Gắn cờ từ này</button>
       </section>
 
       <section class="flashcard-result" id="flashcard-result" hidden>
@@ -207,6 +214,22 @@
           <button class="secondary-button" id="finish-flashcards" type="button">Về trang bài học</button>
           <button class="primary-button" id="retry-flashcards" type="button">Ôn lại từ cần ôn <span>↻</span></button>
         </div>
+      </section>
+    </dialog>
+
+    <dialog class="flagged-words-dialog" id="flagged-words-dialog" aria-labelledby="flagged-words-title">
+      <div class="flagged-words-topbar">
+        <button class="close-button" id="close-flagged-words" type="button" aria-label="Đóng danh sách từ đã gắn cờ">×</button>
+        <div>
+          <p class="eyebrow">GHI NHỚ RIÊNG</p>
+          <h2 id="flagged-words-title">Từ đã gắn cờ</h2>
+        </div>
+        <span class="flagged-words-total"><span id="flagged-words-dialog-count">0</span> từ</span>
+      </div>
+      <section class="flagged-words-panel">
+        <p class="flagged-words-copy" id="flagged-words-copy">Chưa có từ nào được gắn cờ.</p>
+        <div class="flagged-words-list" id="flagged-words-list" aria-live="polite"></div>
+        <button class="primary-button" id="start-flagged-flashcards" type="button" disabled>Ôn bằng flashcard <span>→</span></button>
       </section>
     </dialog>
 
