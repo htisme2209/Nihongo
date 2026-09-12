@@ -31,8 +31,8 @@
           Chọn bài, chọn cách nhớ, và để từng từ mới ở lại lâu hơn trong trí nhớ.
         </p>
         <div class="hero-stats" aria-label="Tien do tong quan">
-          <div><strong id="mastered-total">0</strong><span>từ đã thuộc</span></div>
-          <div><strong id="studied-total">0</strong><span>từ đã luyện</span></div>
+          <div><strong id="mastered-total">0</strong><span>mục đã thuộc</span></div>
+          <div><strong id="studied-total">0</strong><span>mục đã luyện</span></div>
           <div><strong id="lesson-total">0</strong><span>bài có sẵn</span></div>
           <button class="hero-saved-words" id="open-flagged-words" type="button" aria-label="Mở danh sách từ đã gắn cờ">
             <strong id="flagged-words-count">0</strong><span>từ đã gắn cờ</span>
@@ -46,9 +46,32 @@
             <p class="eyebrow">CHỌN ĐIỂM XUẤT PHÁT</p>
             <h2 id="lesson-title">Từ vựng theo bài</h2>
           </div>
-          <button class="text-button" id="continue-button" type="button">Luyện tiếp <span>→</span></button>
+          <div class="lesson-heading-actions">
+            <button class="scope-select-button" id="open-csv-import" type="button" disabled>Nhập CSV <span aria-hidden="true">＋</span></button>
+            <button class="text-button" id="continue-button" type="button">Luyện tiếp <span>→</span></button>
+          </div>
         </div>
-        <div class="lesson-grid" id="lesson-grid" aria-live="polite">
+        <p class="import-csv-status" id="import-csv-status" role="status"></p>
+        <div class="study-scope-toolbar" id="study-scope-toolbar">
+          <div class="study-scope-summary">
+            <p class="study-scope-label">BỘ ÔN HIỆN TẠI</p>
+            <strong id="study-scope-title">Bài 01</strong>
+            <p id="study-scope-detail" aria-live="polite">Sẵn sàng ôn từ vựng theo thứ tự bài học.</p>
+          </div>
+          <div class="study-scope-actions">
+            <label class="shuffle-option" for="shuffle-study-scope">
+              <input id="shuffle-study-scope" type="checkbox" checked />
+              <span>Trộn thứ tự từ</span>
+            </label>
+            <button class="scope-select-button" id="toggle-study-scope" type="button" aria-controls="lesson-grid" aria-pressed="false">
+              <span id="toggle-study-scope-label">Chọn nhiều bài</span> <span id="toggle-study-scope-icon" aria-hidden="true">＋</span>
+            </button>
+          </div>
+        </div>
+        <p class="study-scope-instruction" id="study-scope-instruction" hidden aria-live="polite">
+          Đang chọn bộ ôn: chạm vào các bài để thêm hoặc bỏ. Bộ ôn luôn cần ít nhất một bài.
+        </p>
+        <div class="lesson-grid" id="lesson-grid">
           <p class="loading">Đang nạp từ vựng...</p>
         </div>
       </section>
@@ -98,6 +121,20 @@
             <span class="mode-arrow" aria-hidden="true">→</span>
           </button>
         </div>
+        <fieldset class="hanviet-granularity" id="hanviet-granularity" hidden>
+          <legend>CHẾ ĐỘ HÁN - VIỆT</legend>
+          <p id="hanviet-granularity-copy" aria-live="polite">Nhìn cả từ Hán tự và gõ âm Hán - Việt của từ.</p>
+          <div class="hanviet-granularity-options">
+            <label class="hanviet-granularity-option active" data-hanviet-granularity-option="word">
+              <input id="hanviet-word-mode" type="radio" name="hanviet-granularity" value="word" checked />
+              <span><strong>Ôn cả từ</strong><small>電話 → ĐIỆN THOẠI</small></span>
+            </label>
+            <label class="hanviet-granularity-option" data-hanviet-granularity-option="character">
+              <input id="hanviet-character-mode" type="radio" name="hanviet-granularity" value="character" />
+              <span><strong>Tách từng Hán tự</strong><small>電 / 話 → ĐIỆN / THOẠI</small></span>
+            </label>
+          </div>
+        </fieldset>
         <div class="practice-bar">
           <p><span class="selected-lesson-label">Bài 1</span> <span class="muted">-</span> <span id="practice-description">Nhìn nghĩa tiếng Việt và viết bằng Hiragana.</span></p>
           <div class="practice-actions">
@@ -105,7 +142,7 @@
               <select id="question-count" aria-label="Số câu luyện tập">
                 <option value="10">10 câu</option>
                 <option value="20">20 câu</option>
-                <option value="all">Toàn bộ bài</option>
+                <option id="all-questions-option" value="all">Toàn bộ bài</option>
               </select>
             </label>
             <button class="primary-button" id="start-button" type="button">Bắt đầu luyện <span>→</span></button>
@@ -233,6 +270,43 @@
       </section>
     </dialog>
 
+    <dialog class="import-csv-dialog" id="import-csv-dialog" aria-labelledby="import-csv-title">
+      <div class="import-csv-topbar">
+        <div>
+          <p class="eyebrow">TỪ VỰNG CỦA BẠN</p>
+          <h2 id="import-csv-title">Nhập danh sách CSV</h2>
+        </div>
+        <button class="close-button" id="close-csv-import" type="button" aria-label="Đóng nhập CSV">×</button>
+      </div>
+      <form class="import-csv-form" id="import-csv-form">
+        <p class="import-csv-help" id="import-csv-format">File UTF-8, tối đa 2 MB / 5.000 từ, gồm 2 cột và không có dòng tiêu đề: <strong>cách đọc</strong> và <strong>Hán tự | Hán-Việt | nghĩa</strong>. Dùng dấu — hoặc để trống phần Hán tự/Hán-Việt nếu không có.</p>
+        <pre class="import-csv-example">みます,"見ます | KIẾN | xem, nhìn"
+ごみ,— | — | rác</pre>
+        <label class="import-csv-field" for="import-csv-file">File CSV
+          <input id="import-csv-file" type="file" accept=".csv,text/csv" aria-describedby="import-csv-format import-csv-file-status" required autofocus />
+        </label>
+        <p class="import-csv-help" id="import-csv-file-status" role="status"></p>
+        <label class="import-csv-field" for="import-csv-name">Tên danh sách
+          <input id="import-csv-name" type="text" placeholder="Ví dụ: Bài 26" maxlength="80" required />
+        </label>
+        <div id="import-csv-preview" hidden>
+          <p class="import-csv-count" id="import-csv-count" role="status"></p>
+          <div class="import-csv-table-wrap" tabindex="0" role="region" aria-label="Xem trước từ vựng">
+            <table class="import-csv-table">
+              <thead><tr><th scope="col">Cách đọc</th><th scope="col">Hán tự</th><th scope="col">Hán-Việt</th><th scope="col">Nghĩa</th></tr></thead>
+              <tbody id="import-csv-rows"></tbody>
+            </table>
+          </div>
+        </div>
+        <p class="import-csv-error" id="import-csv-error" role="alert"></p>
+        <p class="import-csv-help">Danh sách được lưu trong trình duyệt này. Hãy giữ file CSV gốc; xóa dữ liệu website sẽ xóa danh sách và tiến độ học.</p>
+        <div class="import-csv-actions">
+          <button class="secondary-button" id="cancel-csv-import" type="button">Hủy</button>
+          <button class="primary-button" id="import-csv-submit" type="submit" disabled>Thêm danh sách</button>
+        </div>
+      </form>
+    </dialog>
+
     <template id="lesson-template">
       <button class="lesson-card" type="button">
         <span class="lesson-number"></span>
@@ -241,6 +315,6 @@
       </button>
     </template>
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
   </body>
 </html>

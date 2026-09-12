@@ -81,18 +81,63 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
 .text-button span, .primary-button span, .next-button span { display: inline-block; margin-left: 5px; font-size: 1.15em; transition: transform .18s ease; }
 .text-button:hover span, .primary-button:hover span, .next-button:hover span { transform: translateX(4px); }
 
+.study-scope-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 22px; padding: 15px 17px; border: 1px solid #aac1a6; border-radius: 4px 26px 4px 4px; background: linear-gradient(100deg, rgb(225 235 217 / 86%), rgb(255 253 247 / 72%)); }
+.study-scope-summary { min-width: 0; }
+.study-scope-label { margin: 0 0 5px; color: var(--moss); font-size: .64rem; font-weight: 900; letter-spacing: .14em; }
+.study-scope-summary strong { display: block; color: var(--forest); font-family: var(--display); font-size: 1.38rem; font-weight: 500; line-height: 1; }
+.study-scope-summary > p:last-child { margin: 6px 0 0; color: var(--moss); font-size: .74rem; font-weight: 700; line-height: 1.4; }
+.study-scope-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 9px; }
+.shuffle-option { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; padding: 8px 10px; color: var(--forest); border: 1px solid rgb(99 129 96 / 45%); border-radius: 3px; background: rgb(255 253 247 / 60%); cursor: pointer; font-size: .72rem; font-weight: 900; white-space: nowrap; }
+.shuffle-option input { width: 16px; height: 16px; margin: 0; accent-color: var(--forest); }
+.scope-select-button { min-height: 42px; padding: 8px 11px; color: var(--cream); border: 1px solid var(--forest); border-radius: 3px; background: var(--forest); font-size: .72rem; font-weight: 900; transition: transform .18s ease, background .18s ease; }
+.scope-select-button:hover { transform: translateY(-2px); background: #173426; }
+.scope-select-button.is-selecting { color: var(--forest); background: var(--sun); }
+.study-scope-instruction { margin: 10px 0; padding: 11px 14px; color: #3c5f47; border-left: 3px solid var(--tomato); background: #fff4e9; font-size: .78rem; font-weight: 800; line-height: 1.45; }
+
 .lesson-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
 .loading { grid-column: 1 / -1; padding: 24px; color: var(--moss); }
 .lesson-card { position: relative; min-height: 156px; padding: 17px; overflow: hidden; text-align: left; color: var(--ink); border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgb(255 253 247 / 42%); transition: background .2s ease, transform .2s ease; }
 .lesson-card:hover, .lesson-card.selected { background: var(--cream); }
 .lesson-card:hover { z-index: 1; transform: translateY(-4px); box-shadow: 0 8px 20px rgb(37 73 56 / 12%); }
 .lesson-card.selected::before { position: absolute; top: 0; left: 0; width: 100%; height: 4px; content: ""; background: var(--tomato); }
+.lesson-card.selected:not(.selection-mode)::after { position: absolute; top: 12px; right: 12px; padding: 4px 6px; color: #fff7e9; border-radius: 999px; background: var(--forest); content: "ĐÃ CHỌN"; font-size: .56rem; font-weight: 900; letter-spacing: .08em; line-height: 1; }
+.lesson-card.selection-mode::after { position: absolute; top: 12px; right: 12px; display: grid; width: 24px; height: 24px; place-items: center; color: var(--moss); border: 1px solid var(--line); border-radius: 50%; background: var(--cream); content: "+"; font-size: 1rem; font-weight: 900; line-height: 1; }
+.lesson-card.selection-mode.selected::after { color: var(--cream); border-color: var(--forest); background: var(--forest); content: "✓"; }
 .lesson-number { display: block; margin-bottom: 17px; color: var(--tomato); font-family: var(--display); font-size: 1.1rem; font-style: italic; }
 .lesson-meta strong, .lesson-meta small { display: block; }
 .lesson-meta strong { margin-bottom: 3px; font-size: .88rem; }
 .lesson-meta small { color: var(--moss); font-size: .7rem; font-weight: 700; }
 .lesson-progress { position: absolute; right: 17px; bottom: 18px; left: 17px; height: 4px; overflow: hidden; background: var(--paper-deep); }
 .lesson-progress i { display: block; height: 100%; background: var(--forest); }
+.lesson-heading-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px 18px; }
+.lesson-card.imported-lesson { background: #eef1e3; }
+.lesson-card.imported-lesson.selected { background: #e0e9d6; }
+.lesson-card.imported-lesson .lesson-number { padding-right: 30px; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow-wrap: anywhere; }
+.import-csv-status { color: var(--forest); font-size: .85rem; line-height: 1.5; }
+.import-csv-status:empty, .import-csv-error:empty, #import-csv-file-status:empty { display: none; }
+.import-csv-dialog { width: min(780px, calc(100% - 28px)); max-height: calc(100dvh - 28px); padding: 0; overflow: auto; overscroll-behavior: contain; color: var(--ink); border: 1px solid var(--line); border-radius: 5px 36px 5px 5px; background: var(--cream); box-shadow: var(--shadow); }
+.import-csv-dialog::backdrop { background: rgb(18 35 27 / 65%); backdrop-filter: blur(3px); }
+.import-csv-topbar { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 26px; border-bottom: 1px solid var(--line); }
+.import-csv-topbar .eyebrow { margin-bottom: 7px; }
+.import-csv-topbar h2 { font-size: clamp(1.5rem, 5vw, 2rem); }
+.import-csv-topbar .close-button { flex-shrink: 0; }
+.import-csv-form { display: grid; gap: 17px; padding: 24px 26px; }
+.import-csv-help { margin: 0; color: var(--moss); font-size: .8rem; line-height: 1.6; overflow-wrap: anywhere; }
+.import-csv-example { max-width: 100%; margin: 0; padding: 13px; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--forest); border-left: 3px solid var(--tomato); background: var(--paper); font-size: .78rem; line-height: 1.6; }
+.import-csv-field { display: grid; min-width: 0; gap: 8px; color: var(--forest); font-size: .84rem; font-weight: 800; }
+.import-csv-field input { width: 100%; min-width: 0; min-height: 46px; padding: 10px 12px; color: var(--ink); border: 1px solid var(--line); border-radius: 3px; background: var(--paper); }
+.import-csv-field input[type="file"] { font-size: .8rem; }
+.import-csv-field input::file-selector-button { margin-right: 10px; padding: 7px 10px; color: var(--cream); border: 0; border-radius: 3px; background: var(--forest); cursor: pointer; }
+.import-csv-count { margin: 0 0 10px; color: var(--forest); font-size: .8rem; font-weight: 800; }
+#import-csv-preview { min-width: 0; }
+.import-csv-table-wrap { max-width: 100%; overflow-x: auto; border: 1px solid var(--line); }
+.import-csv-table { width: 100%; min-width: 510px; border-collapse: collapse; font-size: .76rem; text-align: left; }
+.import-csv-table th, .import-csv-table td { max-width: 220px; padding: 10px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; vertical-align: top; }
+.import-csv-table th { color: var(--forest); background: var(--paper-deep); }
+.import-csv-table tr:last-child td { border-bottom: 0; }
+.import-csv-error { margin: 0; padding: 12px; color: #913523; border-left: 3px solid var(--tomato); background: #f7dfd5; font-size: .84rem; line-height: 1.5; }
+.import-csv-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 12px; }
+#open-csv-import:disabled, #import-csv-submit:disabled { cursor: not-allowed; opacity: .48; transform: none; }
 
 .flashcard-bar { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-top: 20px; padding: 25px 27px; border: 1px solid #aac1a6; border-radius: 4px 34px 4px 4px; background: linear-gradient(110deg, #e1ebd9, #f4efde); }
 .flashcard-intro { display: flex; align-items: center; gap: 16px; }
@@ -120,6 +165,21 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
 .mode-card.active .mode-content small { color: #c5d5c2; }
 .mode-arrow { margin-left: auto; color: var(--tomato); font-size: 1.1rem; }
 .mode-card.active .mode-arrow { color: var(--sun); }
+
+.hanviet-granularity { min-width: 0; margin: 13px 0 0; padding: 14px 16px 16px; border: 1px solid #aac1a6; border-radius: 4px 24px 4px 4px; background: linear-gradient(100deg, rgb(225 235 217 / 78%), rgb(255 253 247 / 58%)); }
+.hanviet-granularity legend { padding: 0 6px; color: var(--forest); font-size: .65rem; font-weight: 900; letter-spacing: .14em; }
+.hanviet-granularity > p { margin: 0 0 12px; color: var(--moss); font-size: .78rem; font-weight: 700; line-height: 1.45; }
+.hanviet-granularity-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.hanviet-granularity-option { display: flex; align-items: center; gap: 10px; min-height: 58px; padding: 10px 12px; color: var(--forest); border: 1px solid rgb(99 129 96 / 45%); border-radius: 3px; background: rgb(255 253 247 / 62%); cursor: pointer; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
+.hanviet-granularity-option:hover { border-color: var(--forest); transform: translateY(-1px); }
+.hanviet-granularity-option.active { border-color: var(--forest); background: var(--forest); color: var(--cream); }
+.hanviet-granularity-option input { flex: 0 0 auto; width: 17px; height: 17px; margin: 0; accent-color: var(--sun); }
+.hanviet-granularity-option span { min-width: 0; }
+.hanviet-granularity-option strong, .hanviet-granularity-option small { display: block; }
+.hanviet-granularity-option strong { font-size: .78rem; }
+.hanviet-granularity-option small { margin-top: 3px; color: var(--moss); font-size: .66rem; font-weight: 800; }
+.hanviet-granularity-option.active small { color: #c5d5c2; }
+.hanviet-granularity-option:has(input:disabled) { cursor: not-allowed; opacity: .52; transform: none; }
 
 .practice-bar { display: flex; align-items: center; justify-content: space-between; gap: 22px; margin-top: 13px; padding: 18px 21px; border-radius: 3px; background: var(--paper-deep); }
 .practice-bar p { margin: 0; font-size: .83rem; font-weight: 700; line-height: 1.5; }
@@ -268,6 +328,15 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .content-section { margin-top: 52px; }
   .section-heading { align-items: flex-start; }
   .section-heading .text-button { padding-top: 7px; white-space: nowrap; }
+  .lesson-section > .section-heading { flex-wrap: wrap; gap: 18px; }
+  .lesson-heading-actions { justify-content: flex-start; }
+  .import-csv-topbar { padding: 20px 16px; }
+  .import-csv-form { padding: 20px 16px; }
+  .import-csv-actions .primary-button { flex: 1; }
+  .study-scope-toolbar { display: block; padding: 16px; }
+  .study-scope-actions { justify-content: flex-start; margin-top: 14px; }
+  .shuffle-option, .scope-select-button { min-height: 44px; }
+  .study-scope-instruction { margin: 8px 0; }
   .lesson-grid {
     grid-auto-flow: column;
     grid-template-columns: none;
@@ -280,6 +349,7 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
     scrollbar-width: thin;
   }
   .lesson-card { min-height: 122px; padding: 14px; scroll-snap-align: start; }
+  .lesson-card.selection-mode::after { top: 9px; right: 9px; }
   .lesson-number { margin-bottom: 15px; }
   .lesson-progress { right: 14px; bottom: 14px; left: 14px; }
   .flashcard-bar { display: block; margin-top: 15px; padding: 20px; }
@@ -288,6 +358,8 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .mode-grid { grid-template-columns: 1fr; gap: 9px; }
   .mode-card { min-height: 76px; padding: 14px 16px; }
   .mode-icon { flex-basis: 46px; width: 46px; height: 46px; }
+  .hanviet-granularity { padding: 14px; }
+  .hanviet-granularity-option { min-height: 62px; }
   .practice-bar { padding: 18px; border: 1px solid rgb(99 129 96 / 23%); }
   .practice-actions { display: grid; grid-template-columns: minmax(96px, .72fr) 1.28fr; align-items: stretch; gap: 10px; margin-top: 16px; }
   .question-count { justify-content: space-between; min-height: 50px; padding: 0 10px; border: 1px solid var(--line); background: rgb(255 253 247 / 56%); }
@@ -361,7 +433,10 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; let
   .flashcard-stamp { flex-basis: 44px; width: 44px; height: 44px; }
   .flashcard-intro h2 { font-size: 1.45rem; }
   .flashcard-intro p:last-child { font-size: .74rem; }
+  .hanviet-granularity-options { grid-template-columns: 1fr; }
   .practice-actions { grid-template-columns: 1fr; }
+  .study-scope-actions { display: grid; grid-template-columns: 1fr; }
+  .shuffle-option, .scope-select-button { justify-content: center; width: 100%; }
   .question-count { min-height: 46px; }
   .question-count select { flex: 1; text-align: right; }
   .quiz-utilities { display: grid; gap: 8px; }

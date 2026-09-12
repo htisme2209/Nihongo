@@ -1,3 +1,5 @@
+import { IMPORTED_LISTS_STORAGE_KEY, MAX_CSV_BYTES, parseVocabularyCsv, suggestListName, decodeImportedLists, importedListWords } from "./vocabulary-csv.mjs";
+
 const PACK_REGISTRY_URL = "packs/registry.json";
 const FLASHCARD_STORAGE_KEY = "kotoba-dojo-flashcard-progress";
 const FLAGGED_WORDS_STORAGE_KEY = "kotoba-dojo-flagged-words-v1";
@@ -29,16 +31,23 @@ const modes = {
     answerLabel: "Âm Hán - Việt",
     answer: (word) => word.hanViet,
     prompt: (word) => word.kanji,
-    support: (word) => `Nghĩa: ${word.meaning}${word.hiragana ? `  ·  ${word.hiragana}` : ""}`,
+    support: (word) => word.hanVietCharacter
+      ? `Từ gốc: ${word.sourceWord.kanji}${word.sourceWord.hiragana ? `  ·  ${word.sourceWord.hiragana}` : ""}  ·  ${word.sourceWord.meaning}`
+      : `Nghĩa: ${word.meaning}${word.hiragana ? `  ·  ${word.hiragana}` : ""}`,
   },
 };
 
 const state = {
   words: [],
+  importedLists: [],
   pack: null,
   registry: null,
   selectedUnit: "",
+  studyUnits: new Set(),
+  isSelectingStudyScope: false,
+  shuffleStudyScope: true,
   selectedMode: "hiragana",
+  hanVietPracticeScope: "word",
   queue: [],
   index: 0,
   score: 0,
@@ -63,6 +72,9 @@ const lessonGrid = $("#lesson-grid");
 const dialog = $("#practice-dialog");
 const flashcardDialog = $("#flashcard-dialog");
 const flaggedWordsDialog = $("#flagged-words-dialog");
+const importDialog = $("#import-csv-dialog");
+let importWords = [];
+let importReadVersion = 0;
 const flashcardCard = $("#flashcard-card");
 let flashcardPointerStart = null;
 let ignoreFlashcardClick = false;
@@ -125,6 +137,112 @@ function toWords(csv, pack) {
       hanViet: read(row, "sinoVietnamese"),
     };
   }).filter((word) => word.unit && word.meaning);
+}
+
+function showImportError(message) {
+  $("#import-csv-error").textContent = message;
+}
+
+function renderImportPreview() {
+  $("#import-csv-preview").hidden = !importWords.length;
+  $("#import-csv-submit").disabled = !importWords.length;
+  $("#import-csv-count").textContent = `${importWords.length} từ vựng · xem trước ${Math.min(5, importWords.length)} từ đầu tiên`;
+  const body = $("#import-csv-rows");
+  body.textContent = "";
+  importWords.slice(0, 5).forEach((word) => {
+    const row = document.createElement("tr");
+    [word.hiragana, word.kanji || "—", word.hanViet || "—", word.meaning].forEach((value) => {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.append(cell);
+    });
+    body.append(row);
+  });
+}
+
+function openCsvImport() {
+  importReadVersion += 1;
+  importWords = [];
+  $("#import-csv-form").reset();
+  $("#import-csv-file-status").textContent = "";
+  showImportError("");
+  renderImportPreview();
+  importDialog.showModal();
+}
+
+async function readCsvImport() {
+  const readVersion = ++importReadVersion;
+  const file = $("#import-csv-file").files[0];
+  importWords = [];
+  showImportError("");
+  renderImportPreview();
+  $("#import-csv-file-status").textContent = "";
+  if (!file) return;
+  try {
+    if (file.size > MAX_CSV_BYTES) throw new Error("File CSV quá lớn. Vui lòng chọn file tối đa 2 MB.");
+    $("#import-csv-file-status").textContent = "Đang đọc file...";
+    const buffer = await file.arrayBuffer();
+    if (readVersion !== importReadVersion) return;
+    let text;
+    try {
+      text = new TextDecoder("utf-8", { fatal: true }).decode(buffer);
+    } catch {
+      throw new Error("Không đọc được tiếng Nhật/tiếng Việt. Hãy lưu file CSV với mã hóa UTF-8.");
+    }
+    importWords = parseVocabularyCsv(text);
+    if (!$("#import-csv-name").value.trim()) $("#import-csv-name").value = suggestListName(file.name);
+    $("#import-csv-file-status").textContent = `Đã đọc ${file.name}.`;
+    renderImportPreview();
+  } catch (error) {
+    if (readVersion !== importReadVersion) return;
+    $("#import-csv-file-status").textContent = "";
+    showImportError(error.message || "Không thể đọc file CSV. Vui lòng chọn lại file.");
+  }
+}
+
+function applyImportedLists(lists) {
+  const oldPackIds = new Set(state.importedLists.map((list) => list.id));
+  state.words = state.words.filter((word) => !oldPackIds.has(word.packId));
+  state.importedLists = lists;
+  state.words.push(...lists.flatMap(importedListWords));
+  $("#lesson-total").textContent = new Set(state.words.map((word) => word.unit)).size;
+}
+
+function saveCsvImport(event) {
+  event.preventDefault();
+  if (!importWords.length) return;
+  const name = $("#import-csv-name").value.trim();
+  if (!name || name.length > 80) {
+    showImportError("Hãy nhập tên danh sách từ 1 đến 80 ký tự.");
+    $("#import-csv-name").focus();
+    return;
+  }
+  let lists;
+  try {
+    lists = decodeImportedLists(localStorage.getItem(IMPORTED_LISTS_STORAGE_KEY));
+  } catch {
+    showImportError("Không thể đọc danh sách đã lưu. Hãy kiểm tra quyền lưu dữ liệu của trình duyệt; dữ liệu hiện có chưa bị thay đổi.");
+    return;
+  }
+  if (lists.some((list) => normalize(list.name) === normalize(name))) {
+    showImportError("Tên danh sách đã tồn tại. Hãy chọn tên khác để dễ phân biệt.");
+    return;
+  }
+  const randomId = Array.from(crypto.getRandomValues(new Uint8Array(16)), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  const list = { id: `csv-${randomId}`, name, words: importWords };
+  const updated = [...lists, list];
+  try {
+    localStorage.setItem(IMPORTED_LISTS_STORAGE_KEY, JSON.stringify({ version: 1, lists: updated }));
+  } catch {
+    showImportError("Chưa thể lưu danh sách: bộ nhớ trình duyệt đã đầy hoặc bị chặn. Hãy giải phóng dung lượng hoặc cho phép lưu dữ liệu rồi thử lại.");
+    return;
+  }
+  applyImportedLists(updated);
+  setUnit(list.id);
+  renderFlaggedWords();
+  importDialog.close();
+  $("#import-csv-status").textContent = `Đã thêm “${name}” với ${list.words.length} từ vựng. Danh sách đã sẵn sàng để học.`;
+  focusLessonCard(list.id);
 }
 
 function getProgress() {
@@ -201,8 +319,13 @@ function saveFlaggedWords() {
   }
 }
 
+function flagTarget(word) {
+  return word?.hanVietCharacter ? word.sourceWord : word;
+}
+
 function isWordFlagged(word) {
-  return Boolean(word && state.flaggedWords.has(flaggedWordKey(word)));
+  const target = flagTarget(word);
+  return Boolean(target && state.flaggedWords.has(flaggedWordKey(target)));
 }
 
 function getFlaggedWords() {
@@ -217,11 +340,14 @@ function getFlaggedWords() {
 }
 
 function renderFlagToggle(button, word) {
+  const target = flagTarget(word);
   const flagged = isWordFlagged(word);
-  button.disabled = !word;
+  button.disabled = !target;
   button.classList.toggle("is-flagged", flagged);
   button.setAttribute("aria-pressed", String(flagged));
-  button.textContent = flagged ? "Bỏ gắn cờ" : "Gắn cờ từ này";
+  button.textContent = word?.hanVietCharacter
+    ? (flagged ? "Bỏ cờ từ gốc" : "Gắn cờ từ gốc")
+    : (flagged ? "Bỏ gắn cờ" : "Gắn cờ từ này");
 }
 
 function renderFlagToggles() {
@@ -299,16 +425,17 @@ function focusFlaggedWordAction(index) {
 }
 
 function toggleWordFlag(word, afterRender = null) {
-  if (!word) return;
+  const target = flagTarget(word);
+  if (!target) return;
   // Refresh first so another tab's latest saved flags are not overwritten.
   loadFlaggedWords();
-  const key = flaggedWordKey(word);
+  const key = flaggedWordKey(target);
   if (state.flaggedWords.has(key)) {
     state.flaggedWords.delete(key);
   } else {
     state.flaggedWords.set(key, {
-      packId: word.packId,
-      sourceId: word.sourceId,
+      packId: target.packId,
+      sourceId: target.sourceId,
       flaggedAt: new Date().toISOString(),
     });
   }
@@ -339,13 +466,80 @@ function unitLabel() {
 }
 
 function displayUnit(unit) {
+  const importedList = state.importedLists.find((list) => list.id === unit);
+  if (importedList) return importedList.name;
   const value = String(unit);
   const formatted = /^\d+$/.test(value) ? value.padStart(2, "0") : value;
   return `${unitLabel()} ${formatted}`;
 }
 
 function sortUnits(units) {
-  return [...units].sort((left, right) => left.localeCompare(right, "vi", { numeric: true }));
+  const importedIds = new Set(state.importedLists.map((list) => list.id));
+  return [...units].sort((left, right) => Number(importedIds.has(left)) - Number(importedIds.has(right))
+    || (importedIds.has(left) ? displayUnit(left).localeCompare(displayUnit(right), "vi", { numeric: true })
+      : left.localeCompare(right, "vi", { numeric: true })));
+}
+
+function getStudyUnits() {
+  const availableUnits = new Set(state.words.map((word) => word.unit));
+  return sortUnits([...state.studyUnits].filter((unit) => availableUnits.has(unit)));
+}
+
+function studyScopeLabel() {
+  const units = getStudyUnits();
+  if (units.length === 1) return displayUnit(units[0]);
+  return `${units.length} bài đã chọn`;
+}
+
+function studyWords() {
+  const orderedUnits = getStudyUnits();
+  const units = new Set(orderedUnits);
+  return state.words
+    .filter((word) => units.has(word.unit))
+    .sort((left, right) => orderedUnits.indexOf(left.unit) - orderedUnits.indexOf(right.unit) || left.order - right.order);
+}
+
+function orderForStudy(words) {
+  return state.shuffleStudyScope ? shuffled(words) : [...words];
+}
+
+function focusLessonCard(unit) {
+  [...lessonGrid.querySelectorAll(".lesson-card")]
+    .find((card) => card.dataset.unit === String(unit))
+    ?.focus({ preventScroll: true });
+}
+
+function renderStudyScope() {
+  const units = getStudyUnits();
+  const wordCount = studyWords().length;
+  const label = studyScopeLabel();
+  const isMultiple = units.length > 1;
+  const detail = isMultiple
+    ? `${wordCount} từ vựng từ ${units.length} bài${state.shuffleStudyScope ? " · sẽ được trộn khi bắt đầu." : " · giữ theo thứ tự bài học."}`
+    : `${wordCount} từ vựng${state.shuffleStudyScope ? " · sẽ được trộn khi bắt đầu." : " · giữ theo thứ tự bài học."}`;
+  const toggle = $("#toggle-study-scope");
+
+  $("#study-scope-title").textContent = label;
+  $("#study-scope-detail").textContent = detail;
+  $("#study-scope-toolbar").setAttribute("aria-label", `Bộ ôn ${label}: ${detail}`);
+  $("#study-scope-instruction").hidden = !state.isSelectingStudyScope;
+  $("#shuffle-study-scope").checked = state.shuffleStudyScope;
+  $("#toggle-study-scope-label").textContent = state.isSelectingStudyScope ? "Xong chọn" : "Chọn nhiều bài";
+  $("#toggle-study-scope-icon").textContent = state.isSelectingStudyScope ? "✓" : "＋";
+  toggle.classList.toggle("is-selecting", state.isSelectingStudyScope);
+  toggle.setAttribute("aria-pressed", String(state.isSelectingStudyScope));
+  $(".selected-lesson-label").textContent = label;
+  $("#all-questions-option").textContent = isMultiple ? "Toàn bộ bộ ôn" : "Toàn bộ bài";
+  $("#continue-button").setAttribute("aria-label", `Luyện ${label}`);
+  $("#start-button").setAttribute("aria-label", `Bắt đầu luyện ${label}`);
+  $("#start-flashcards").setAttribute("aria-label", `Học flashcard ${label}`);
+}
+
+function refreshStudyScope() {
+  renderStudyScope();
+  renderLessons();
+  updateFlashcardCTA();
+  renderHanVietGranularity();
 }
 
 function progressForUnit(unit) {
@@ -371,14 +565,21 @@ function renderLessons() {
   const template = $("#lesson-template");
   lessonGrid.textContent = "";
   const units = sortUnits(new Set(state.words.map((word) => word.unit)));
+  const studyUnits = new Set(getStudyUnits());
 
   units.forEach((unit) => {
     const fragment = template.content.cloneNode(true);
     const card = fragment.querySelector(".lesson-card");
     const stats = progressForUnit(unit);
+    const selected = studyUnits.has(unit);
     card.dataset.unit = unit;
-    card.classList.toggle("selected", unit === state.selectedUnit);
-    card.setAttribute("aria-pressed", unit === state.selectedUnit);
+    card.classList.toggle("imported-lesson", state.importedLists.some((list) => list.id === unit));
+    card.classList.toggle("selected", selected);
+    card.classList.toggle("selection-mode", state.isSelectingStudyScope);
+    card.setAttribute("aria-pressed", String(selected));
+    card.setAttribute("aria-label", state.isSelectingStudyScope
+      ? `${selected ? "Bỏ" : "Thêm"} ${displayUnit(unit)} ${selected ? "khỏi" : "vào"} bộ ôn`
+      : `Chọn ${displayUnit(unit)} để ôn riêng`);
     fragment.querySelector(".lesson-number").textContent = displayUnit(unit);
     fragment.querySelector(".lesson-meta strong").textContent = `${stats.total} từ vựng`;
     fragment.querySelector(".lesson-meta small").textContent = stats.mastered ? `${stats.mastered} đã thuộc` : "Sẵn sàng luyện";
@@ -389,9 +590,29 @@ function renderLessons() {
 
 function setUnit(unit) {
   state.selectedUnit = String(unit);
-  $(".selected-lesson-label").textContent = displayUnit(state.selectedUnit);
-  renderLessons();
-  updateFlashcardCTA();
+  state.studyUnits = new Set([state.selectedUnit]);
+  state.isSelectingStudyScope = false;
+  refreshStudyScope();
+}
+
+function toggleStudyUnit(unit) {
+  const normalizedUnit = String(unit);
+  const selected = new Set(getStudyUnits());
+  if (selected.has(normalizedUnit)) {
+    if (selected.size === 1) return;
+    selected.delete(normalizedUnit);
+  } else {
+    selected.add(normalizedUnit);
+  }
+  state.studyUnits = selected;
+  state.selectedUnit = getStudyUnits()[0] || "";
+  refreshStudyScope();
+  focusLessonCard(normalizedUnit);
+}
+
+function toggleStudyScopeSelection() {
+  state.isSelectingStudyScope = !state.isSelectingStudyScope;
+  refreshStudyScope();
 }
 
 function setMode(mode) {
@@ -401,7 +622,7 @@ function setMode(mode) {
     card.classList.toggle("active", active);
     card.setAttribute("aria-pressed", active);
   });
-  $("#practice-description").textContent = modes[mode].description;
+  renderHanVietGranularity();
 }
 
 function normalize(value) {
@@ -411,13 +632,130 @@ function normalize(value) {
     .toLocaleLowerCase("vi-VN");
 }
 
+function isHanVietCharacterPractice() {
+  return state.selectedMode === "hanviet" && state.hanVietPracticeScope === "character";
+}
+
+function hanCharacters(value) {
+  return (value || "").match(/\p{Unified_Ideograph}/gu) || [];
+}
+
+function hasAmbiguousHanVietNotation(value) {
+  return ["[", "]", "［", "］", "/", "／", "|", ";", "(", ")", "（", "）"].some((marker) => (value || "").includes(marker));
+}
+
+function hanVietReadingTokens(value) {
+  const trimmed = (value || "").trim();
+  if (!/^\p{L}+(?:\s+\p{L}+)*$/u.test(trimmed)) return [];
+  return trimmed.split(/\s+/).map((reading) => reading.toLocaleUpperCase("vi-VN"));
+}
+
+function hanVietCharacterPairs(word) {
+  if (hasAmbiguousHanVietNotation(word.kanji) || hasAmbiguousHanVietNotation(word.hanViet)) return [];
+  const characters = hanCharacters(word.kanji);
+  const readings = hanVietReadingTokens(word.hanViet);
+  if (!characters.length || characters.length !== readings.length) return [];
+  return characters.map((character, index) => ({ character, reading: readings[index], index }));
+}
+
+function hanVietCharacterCatalog() {
+  const readingsByCharacter = new Map();
+
+  state.words.forEach((word) => {
+    hanVietCharacterPairs(word).forEach(({ character, reading, index }) => {
+      const readingKey = normalize(reading);
+      if (!readingKey) return;
+      const readings = readingsByCharacter.get(character) || new Map();
+      if (!readings.has(readingKey)) readings.set(readingKey, { reading, word, index });
+      readingsByCharacter.set(character, readings);
+    });
+  });
+
+  return new Map([...readingsByCharacter.entries()]
+    .filter(([, readings]) => readings.size === 1)
+    .map(([character, readings]) => [character, readings.values().next().value]));
+}
+
+function hanVietCharacterWords() {
+  const catalog = hanVietCharacterCatalog();
+  const itemsByCharacter = new Map();
+
+  studyWords().forEach((word) => {
+    hanVietCharacterPairs(word).forEach(({ character, reading, index }) => {
+      const entry = catalog.get(character);
+      if (!entry || normalize(entry.reading) !== normalize(reading) || itemsByCharacter.has(character)) return;
+      itemsByCharacter.set(character, { word, reading: entry.reading, index });
+    });
+  });
+
+  return [...itemsByCharacter.entries()]
+    .map(([character, { word, reading, index }]) => {
+      const packId = word.packId || state.pack?.id || "pack";
+      return {
+        id: `${packId}:hanviet-character:${character}`,
+        sourceId: `hanviet-character:${character}`,
+        packId,
+        unit: word.unit,
+        order: word.order + (index + 1) / 100,
+        meaning: word.meaning,
+        hiragana: "",
+        kanji: character,
+        hanViet: reading,
+        hanVietCharacter: true,
+        sourceWord: word,
+      };
+    })
+    .sort((left, right) => left.unit.localeCompare(right.unit, "vi", { numeric: true }) || left.order - right.order);
+}
+
+function updatePracticeDescription() {
+  $("#practice-description").textContent = isHanVietCharacterPractice()
+    ? "Nhìn từng Hán tự và gõ âm Hán - Việt riêng của chữ đó."
+    : modes[state.selectedMode].description;
+}
+
+function renderHanVietGranularity() {
+  const settings = $("#hanviet-granularity");
+  const enabled = state.selectedMode === "hanviet";
+  settings.hidden = !enabled;
+  if (!enabled) {
+    updatePracticeDescription();
+    return;
+  }
+
+  const characterCount = hanVietCharacterWords().length;
+  if (!characterCount && state.hanVietPracticeScope === "character") state.hanVietPracticeScope = "word";
+  $("#hanviet-word-mode").checked = state.hanVietPracticeScope === "word";
+  $("#hanviet-character-mode").checked = state.hanVietPracticeScope === "character";
+  $("#hanviet-character-mode").disabled = !characterCount;
+  document.querySelectorAll("[data-hanviet-granularity-option]").forEach((option) => {
+    option.classList.toggle("active", option.dataset.hanvietGranularityOption === state.hanVietPracticeScope);
+  });
+  $("#hanviet-granularity-copy").textContent = state.hanVietPracticeScope === "character"
+    ? `${characterCount} Hán tự có âm Hán - Việt thống nhất trong bộ ôn này. Mỗi chữ chỉ xuất hiện một lần.`
+    : "Nhìn cả từ Hán tự và gõ âm Hán - Việt của từ.";
+  updatePracticeDescription();
+}
+
+function setHanVietPracticeScope(scope) {
+  if (scope !== "word" && scope !== "character") return;
+  state.hanVietPracticeScope = scope;
+  renderHanVietGranularity();
+}
+
 function eligibleWords() {
+  if (isHanVietCharacterPractice()) return hanVietCharacterWords();
   const mode = modes[state.selectedMode];
-  return state.words.filter((word) => word.unit === state.selectedUnit && mode.answer(word) && mode.prompt(word));
+  return studyWords().filter((word) => mode.answer(word) && mode.prompt(word));
 }
 
 function shuffled(items) {
-  return [...items].sort(() => Math.random() - 0.5);
+  const result = [...items];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
+  }
+  return result;
 }
 
 function kanjiTokens(value) {
@@ -439,8 +777,8 @@ function isKanjiMode() {
 function buildKanjiChoices(word) {
   const answerTokens = kanjiTokens(word.kanji);
   const usedTokens = new Set(answerTokens);
-  const lessonTokens = state.words
-    .filter((item) => item.unit === state.selectedUnit && item.kanji)
+  const lessonTokens = studyWords()
+    .filter((item) => item.kanji)
     .flatMap((item) => kanjiTokens(item.kanji))
     .filter((token) => /^\p{Script=Han}$/u.test(token) && !usedTokens.has(token));
   const distractorCount = answerTokens.length > 10 ? 2 : 4;
@@ -509,15 +847,16 @@ function clearKanjiAnswer() {
 }
 
 function flashcardWords() {
-  return state.words.filter((word) => word.unit === state.selectedUnit && (word.kanji || word.hiragana));
+  return studyWords().filter((word) => word.kanji || word.hiragana);
 }
 
 function updateFlashcardCTA() {
   const count = flashcardWords().length;
-  $("#flashcard-lesson-label").textContent = displayUnit(state.selectedUnit);
+  const label = studyScopeLabel();
+  $("#flashcard-lesson-label").textContent = label;
   $("#flashcard-count").textContent = count
     ? `${count} thẻ từ vựng. Chạm để lật, rồi tự đánh giá mức độ ghi nhớ.`
-    : "Bài này chưa có thẻ từ vựng để hiển thị.";
+    : "Danh sách đã chọn chưa có thẻ từ vựng để hiển thị.";
 }
 
 function flashcardFrontText(word) {
@@ -532,7 +871,7 @@ function renderFlashcard() {
   const detail = [word.kanji, word.hiragana].filter(Boolean).join("  ·  ");
   const hanViet = $("#flashcard-hanviet");
 
-  $("#flashcard-progress-text").textContent = `${flashcardState.label || displayUnit(state.selectedUnit)} · Thẻ ${flashcardState.index + 1} / ${flashcardState.deck.length}`;
+  $("#flashcard-progress-text").textContent = `${flashcardState.label || studyScopeLabel()} · Thẻ ${flashcardState.index + 1} / ${flashcardState.deck.length}`;
   $("#flashcard-progress-bar").style.width = `${((flashcardState.index + 1) / flashcardState.deck.length) * 100}%`;
   $("#flashcard-primary").textContent = primary;
   $("#flashcard-reading").textContent = reading;
@@ -551,15 +890,15 @@ function renderFlashcard() {
 function startFlashcards(words = null, label = null) {
   const candidates = words || flashcardWords();
   if (!candidates.length) {
-    alert("Bài này chưa có dữ liệu phù hợp để tạo flashcard.");
+    alert("Danh sách đã chọn chưa có dữ liệu phù hợp để tạo flashcard.");
     return;
   }
-  flashcardState.deck = shuffled(candidates);
+  flashcardState.deck = orderForStudy(candidates);
   flashcardState.index = 0;
   flashcardState.isFlipped = false;
   flashcardState.knownIds = new Set();
   flashcardState.reviewIds = new Set();
-  flashcardState.label = label || displayUnit(state.selectedUnit);
+  flashcardState.label = label || studyScopeLabel();
   $("#flashcard-panel").hidden = false;
   $("#flashcard-result").hidden = true;
   if (!flashcardDialog.open) flashcardDialog.showModal();
@@ -634,12 +973,12 @@ function closeFlashcards() {
 function startPractice(words = null) {
   const candidates = words || eligibleWords();
   if (!candidates.length) {
-    alert("Bài này chưa có dữ liệu phù hợp với chế độ đã chọn.");
+    alert("Danh sách đã chọn chưa có dữ liệu phù hợp với chế độ đã chọn.");
     return;
   }
   const countValue = $("#question-count").value;
   const count = countValue === "all" ? candidates.length : Math.min(Number(countValue), candidates.length);
-  state.queue = shuffled(candidates).slice(0, count);
+  state.queue = orderForStudy(candidates).slice(0, count);
   state.index = 0;
   state.score = 0;
   state.answered = false;
@@ -654,12 +993,13 @@ function renderQuestion() {
   const word = state.queue[state.index];
   const mode = modes[state.selectedMode];
   const usesKanjiBuilder = isKanjiMode();
+  const isHanVietCharacter = Boolean(word.hanVietCharacter);
   state.answered = false;
   $("#progress-text").textContent = `Câu ${state.index + 1} / ${state.queue.length}`;
   $("#progress-bar").style.width = `${(state.index / state.queue.length) * 100}%`;
   $("#score-value").textContent = state.score;
-  $("#quiz-mode-label").textContent = mode.label;
-  $("#prompt-label").textContent = mode.promptLabel;
+  $("#quiz-mode-label").textContent = isHanVietCharacter ? `${mode.label} · TÁCH CHỮ` : mode.label;
+  $("#prompt-label").textContent = isHanVietCharacter ? "HÁN TỰ RIÊNG" : mode.promptLabel;
   $("#practice-title").textContent = mode.prompt(word);
   $("#question-support").textContent = mode.support(word);
   $("#answer-form").hidden = usesKanjiBuilder;
@@ -682,6 +1022,13 @@ function renderQuestion() {
       (usesKanjiBuilder ? $("#kanji-builder") : $("#answer-input")).scrollIntoView({ behavior: "smooth", block: "center" });
     }
   });
+}
+
+function answerRevealText(word, mode) {
+  if (!word.hanVietCharacter) return `${mode.answerLabel}: ${mode.answer(word)}  ·  Nghĩa: ${word.meaning}`;
+  const source = word.sourceWord;
+  const context = [source.kanji, source.hiragana].filter(Boolean).join("  ·  ");
+  return `${mode.answerLabel}: ${mode.answer(word)}  ·  Từ gốc: ${context}  ·  ${source.meaning}`;
 }
 
 function revealAnswer() {
@@ -709,7 +1056,7 @@ function revealAnswer() {
   feedback.hidden = false;
   feedback.className = "feedback incorrect";
   $("#feedback-title").textContent = "Đáp án đã hiện. Hãy quay lại ôn từ này nhé.";
-  $("#answer-reveal").textContent = `${mode.answerLabel}: ${mode.answer(word)}  ·  Nghĩa: ${word.meaning}`;
+  $("#answer-reveal").textContent = answerRevealText(word, mode);
   $("#next-button").focus();
 }
 
@@ -735,7 +1082,7 @@ function checkAnswer(answer = $("#answer-input").value) {
   feedback.hidden = false;
   feedback.className = `feedback ${correct ? "correct" : "incorrect"}`;
   $("#feedback-title").textContent = correct ? "Chính xác. Nhịp này rất tốt!" : "Chưa đúng, hãy ghi nhớ từ này nhé.";
-  $("#answer-reveal").textContent = `${mode.answerLabel}: ${mode.answer(word)}  ·  Nghĩa: ${word.meaning}`;
+  $("#answer-reveal").textContent = answerRevealText(word, mode);
   $("#next-button").focus();
 }
 
@@ -756,8 +1103,9 @@ function showResults() {
   $("#result-total").textContent = state.queue.length;
   const ratio = state.score / state.queue.length;
   $("#result-title").textContent = ratio === 1 ? "Hoàn hảo!" : ratio >= 0.7 ? "Bạn đang làm rất tốt." : "Một bước nữa là sẽ nhớ.";
+  const usesHanVietCharacters = state.queue.some((word) => word.hanVietCharacter);
   $("#result-copy").textContent = state.incorrect.length
-    ? `Đánh dấu ${state.incorrect.length} từ bên dưới để quay lại ôn ngay lúc còn nhớ.`
+    ? `Đánh dấu ${state.incorrect.length} ${usesHanVietCharacters ? "chữ Hán" : "từ"} bên dưới để quay lại ôn ngay lúc còn nhớ.`
     : "Bạn đã trả lời đúng tất cả. Thử một bài khác để giữ nhịp!";
   const review = $("#review-list");
   review.textContent = "";
@@ -766,7 +1114,9 @@ function showResults() {
     item.className = "review-item";
     const meaning = document.createElement("span");
     const answer = document.createElement("strong");
-    meaning.textContent = word.meaning;
+    meaning.textContent = word.hanVietCharacter
+      ? `${word.kanji} trong ${word.sourceWord.kanji} · ${word.sourceWord.meaning}`
+      : word.meaning;
     answer.textContent = modes[state.selectedMode].answer(word);
     item.append(meaning, answer);
     review.append(item);
@@ -795,25 +1145,53 @@ async function initialize() {
     if (!dataResponse.ok) throw new Error("Không thể nạp dữ liệu từ vựng");
     state.words = toWords(await dataResponse.text(), state.pack);
     if (!state.words.length) throw new Error("Du lieu tu vung trong");
-    loadFlaggedWords();
-    state.selectedUnit = sortUnits(new Set(state.words.map((word) => word.unit)))[0];
-    $("#lesson-total").textContent = new Set(state.words.map((word) => word.unit)).size;
-    setUnit(state.selectedUnit);
-    updateOverview();
-    renderFlaggedWords();
   } catch (error) {
-    lessonGrid.innerHTML = `<p class="loading">Không thể nạp dữ liệu. Hãy mở trang qua một local server (ví dụ: <code>python -m http.server</code>).</p>`;
     console.error(error);
   }
+  try {
+    applyImportedLists(decodeImportedLists(localStorage.getItem(IMPORTED_LISTS_STORAGE_KEY)));
+  } catch {
+    $("#import-csv-status").textContent = "Không thể đọc danh sách CSV đã lưu trong trình duyệt.";
+  }
+  loadFlaggedWords();
+  $("#lesson-total").textContent = new Set(state.words.map((word) => word.unit)).size;
+  if (state.words.length) {
+    setUnit(sortUnits(new Set(state.words.map((word) => word.unit)))[0]);
+  } else {
+    lessonGrid.innerHTML = `<p class="loading">Không thể nạp dữ liệu. Hãy mở trang qua một local server (ví dụ: <code>python -m http.server</code>) hoặc nhập danh sách CSV của bạn.</p>`;
+  }
+  updateOverview();
+  renderFlaggedWords();
+  $("#open-csv-import").disabled = false;
 }
+
+$("#open-csv-import").addEventListener("click", openCsvImport);
+$("#close-csv-import").addEventListener("click", () => importDialog.close());
+$("#cancel-csv-import").addEventListener("click", () => importDialog.close());
+$("#import-csv-file").addEventListener("change", readCsvImport);
+$("#import-csv-form").addEventListener("submit", saveCsvImport);
+importDialog.addEventListener("close", () => { importReadVersion += 1; });
+importDialog.addEventListener("click", (event) => { if (event.target === importDialog) importDialog.close(); });
 
 lessonGrid.addEventListener("click", (event) => {
   const card = event.target.closest(".lesson-card");
-  if (card) setUnit(card.dataset.unit);
+  if (!card) return;
+  if (state.isSelectingStudyScope) toggleStudyUnit(card.dataset.unit);
+  else setUnit(card.dataset.unit);
+});
+$("#toggle-study-scope").addEventListener("click", toggleStudyScopeSelection);
+$("#shuffle-study-scope").addEventListener("change", (event) => {
+  state.shuffleStudyScope = event.target.checked;
+  renderStudyScope();
 });
 $("#mode-grid").addEventListener("click", (event) => {
   const card = event.target.closest(".mode-card");
   if (card) setMode(card.dataset.mode);
+});
+document.querySelectorAll('input[name="hanviet-granularity"]').forEach((input) => {
+  input.addEventListener("change", () => {
+    if (input.checked) setHanVietPracticeScope(input.value);
+  });
 });
 $("#start-button").addEventListener("click", () => startPractice());
 $("#continue-button").addEventListener("click", () => startPractice());
@@ -869,6 +1247,18 @@ $("#retry-flashcards").addEventListener("click", () => {
 flashcardDialog.addEventListener("click", (event) => { if (event.target === flashcardDialog) closeFlashcards(); });
 
 window.addEventListener("storage", (event) => {
+  if (event.key === IMPORTED_LISTS_STORAGE_KEY || event.key === null) {
+    try {
+      applyImportedLists(decodeImportedLists(localStorage.getItem(IMPORTED_LISTS_STORAGE_KEY)));
+      state.studyUnits = new Set(getStudyUnits());
+      if (!state.studyUnits.size && state.words.length) state.studyUnits.add(sortUnits(new Set(state.words.map((word) => word.unit)))[0]);
+      state.selectedUnit = getStudyUnits()[0] || "";
+      refreshStudyScope();
+      renderFlaggedWords();
+    } catch {
+      $("#import-csv-status").textContent = "Không thể đồng bộ danh sách CSV đã lưu từ tab khác.";
+    }
+  }
   if (event.key !== FLAGGED_WORDS_STORAGE_KEY && event.key !== null) return;
   loadFlaggedWords();
   renderFlaggedWords();
