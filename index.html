@@ -71,6 +71,14 @@
         <p class="study-scope-instruction" id="study-scope-instruction" hidden aria-live="polite">
           Đang chọn bộ ôn: chạm vào các bài để thêm hoặc bỏ. Bộ ôn luôn cần ít nhất một bài.
         </p>
+        <div class="lesson-filter-bar">
+          <label for="lesson-type-filter">Lọc theo loại
+            <select id="lesson-type-filter" aria-controls="lesson-grid" aria-describedby="lesson-filter-summary">
+              <option value="">Tất cả loại</option>
+            </select>
+          </label>
+          <p id="lesson-filter-summary" role="status"></p>
+        </div>
         <div class="lesson-grid" id="lesson-grid">
           <p class="loading">Đang nạp từ vựng...</p>
         </div>
@@ -289,6 +297,14 @@
         <label class="import-csv-field" for="import-csv-name">Tên danh sách
           <input id="import-csv-name" type="text" placeholder="Ví dụ: Bài 26" maxlength="80" required />
         </label>
+        <label class="import-csv-field" for="import-csv-type">Loại danh sách
+          <select id="import-csv-type" required aria-controls="import-csv-new-type-field">
+            <option value="type:theo bài">Theo bài</option>
+          </select>
+        </label>
+        <label class="import-csv-field" id="import-csv-new-type-field" for="import-csv-new-type" hidden>Tên loại mới
+          <input id="import-csv-new-type" type="text" placeholder="Ví dụ: Giao tiếp công việc" maxlength="50" disabled />
+        </label>
         <div id="import-csv-preview" hidden>
           <p class="import-csv-count" id="import-csv-count" role="status"></p>
           <div class="import-csv-table-wrap" tabindex="0" role="region" aria-label="Xem trước từ vựng">
@@ -299,7 +315,7 @@
           </div>
         </div>
         <p class="import-csv-error" id="import-csv-error" role="alert"></p>
-        <p class="import-csv-help">Danh sách được lưu trong trình duyệt này. Hãy giữ file CSV gốc; xóa dữ liệu website sẽ xóa danh sách và tiến độ học.</p>
+        <p class="import-csv-help" id="import-csv-storage-help">Chạy python3 server.py để tự lưu file CSV và danh sách vào thư mục dự án, rồi tự nạp lại ở lần mở app sau.</p>
         <div class="import-csv-actions">
           <button class="secondary-button" id="cancel-csv-import" type="button">Hủy</button>
           <button class="primary-button" id="import-csv-submit" type="submit" disabled>Thêm danh sách</button>
@@ -310,6 +326,7 @@
     <template id="lesson-template">
       <button class="lesson-card" type="button">
         <span class="lesson-number"></span>
+        <span class="lesson-type"></span>
         <span class="lesson-meta"><strong></strong><small></small></span>
         <span class="lesson-progress"><i></i></span>
       </button>

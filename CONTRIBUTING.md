@@ -19,12 +19,12 @@ Thank you for helping make Kotoba Dojo a community-built place to learn vocabula
 ## Thiết lập / Setup
 
 ```powershell
-python -m http.server 4173
+python3 server.py
 ```
 
-Mở `http://127.0.0.1:4173`. Không cần cài dependency cho phiên bản hiện tại.
+Mở `http://127.0.0.1:4173`. Cần Python 3.10 trở lên, không cần cài dependency. CSV cá nhân tự lưu trong `imported-lists/` (được bỏ qua bởi Git).
 
-Open `http://127.0.0.1:4173`. The current version requires no installed dependencies.
+Open `http://127.0.0.1:4173`. Requires Python 3.10 or later and no installed dependencies. Personal CSV files are saved under `imported-lists/` (ignored by Git).
 
 ## Đóng góp gói từ vựng / Adding a vocabulary pack
 

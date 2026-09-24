@@ -1,9 +1,10 @@
-import { IMPORTED_LISTS_STORAGE_KEY, MAX_CSV_BYTES, parseVocabularyCsv, suggestListName, decodeImportedLists, importedListWords } from "./vocabulary-csv.mjs";
+import { IMPORTED_LISTS_STORAGE_KEY, MAX_CSV_BYTES, BUILTIN_LIST_TYPE, PRESET_LIST_TYPES, normalizeListType, listTypeKey, parseVocabularyCsv, suggestListName, decodeImportedLists, importedListWords } from "./vocabulary-csv.mjs";
 
 const PACK_REGISTRY_URL = "packs/registry.json";
 const FLASHCARD_STORAGE_KEY = "kotoba-dojo-flashcard-progress";
 const FLAGGED_WORDS_STORAGE_KEY = "kotoba-dojo-flagged-words-v1";
 const FLAGGED_WORDS_STORAGE_VERSION = 1;
+const IMPORTED_LISTS_API = "/api/imported-lists";
 
 const modes = {
   hiragana: {
@@ -32,7 +33,7 @@ const modes = {
     answer: (word) => word.hanViet,
     prompt: (word) => word.kanji,
     support: (word) => word.hanVietCharacter
-      ? `Từ gốc: ${word.sourceWord.kanji}${word.sourceWord.hiragana ? `  ·  ${word.sourceWord.hiragana}` : ""}  ·  ${word.sourceWord.meaning}`
+      ? ""
       : `Nghĩa: ${word.meaning}${word.hiragana ? `  ·  ${word.hiragana}` : ""}`,
   },
 };
@@ -40,6 +41,8 @@ const modes = {
 const state = {
   words: [],
   importedLists: [],
+  csvStorage: "browser",
+  lessonTypeFilter: "",
   pack: null,
   registry: null,
   selectedUnit: "",
@@ -74,6 +77,9 @@ const flashcardDialog = $("#flashcard-dialog");
 const flaggedWordsDialog = $("#flagged-words-dialog");
 const importDialog = $("#import-csv-dialog");
 let importWords = [];
+let importCsvSource = null;
+let importSaving = false;
+let importedListsVersion = 0;
 let importReadVersion = 0;
 const flashcardCard = $("#flashcard-card");
 let flashcardPointerStart = null;
@@ -161,19 +167,56 @@ function renderImportPreview() {
 }
 
 function openCsvImport() {
+  if (importSaving) return;
   importReadVersion += 1;
   importWords = [];
+  importCsvSource = null;
   $("#import-csv-form").reset();
+  renderImportTypes();
   $("#import-csv-file-status").textContent = "";
   showImportError("");
   renderImportPreview();
   importDialog.showModal();
 }
 
+function listTypes() {
+  const types = new Map();
+  [...PRESET_LIST_TYPES, ...state.importedLists.map((list) => normalizeListType(list.type))].forEach((type) => {
+    const key = listTypeKey(type);
+    if (!types.has(key)) types.set(key, type);
+  });
+  return types;
+}
+
+function appendTypeOption(select, value, label) {
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = label;
+  select.append(option);
+}
+
+function renderImportTypes() {
+  const select = $("#import-csv-type");
+  select.textContent = "";
+  listTypes().forEach((type, key) => appendTypeOption(select, key, type));
+  appendTypeOption(select, "new", "+ Tạo loại mới");
+  select.value = state.lessonTypeFilter || listTypeKey(BUILTIN_LIST_TYPE);
+  toggleCustomListType();
+}
+
+function toggleCustomListType() {
+  const custom = $("#import-csv-type").value === "new";
+  $("#import-csv-new-type-field").hidden = !custom;
+  $("#import-csv-new-type").required = custom;
+  $("#import-csv-new-type").disabled = !custom;
+}
+
 async function readCsvImport() {
+  if (importSaving) return;
   const readVersion = ++importReadVersion;
   const file = $("#import-csv-file").files[0];
   importWords = [];
+  importCsvSource = null;
   showImportError("");
   renderImportPreview();
   $("#import-csv-file-status").textContent = "";
@@ -185,11 +228,12 @@ async function readCsvImport() {
     if (readVersion !== importReadVersion) return;
     let text;
     try {
-      text = new TextDecoder("utf-8", { fatal: true }).decode(buffer);
+      text = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(buffer);
     } catch {
       throw new Error("Không đọc được tiếng Nhật/tiếng Việt. Hãy lưu file CSV với mã hóa UTF-8.");
     }
     importWords = parseVocabularyCsv(text);
+    importCsvSource = { filename: file.name, text };
     if (!$("#import-csv-name").value.trim()) $("#import-csv-name").value = suggestListName(file.name);
     $("#import-csv-file-status").textContent = `Đã đọc ${file.name}.`;
     renderImportPreview();
@@ -201,6 +245,7 @@ async function readCsvImport() {
 }
 
 function applyImportedLists(lists) {
+  importedListsVersion += 1;
   const oldPackIds = new Set(state.importedLists.map((list) => list.id));
   state.words = state.words.filter((word) => !oldPackIds.has(word.packId));
   state.importedLists = lists;
@@ -208,40 +253,159 @@ function applyImportedLists(lists) {
   $("#lesson-total").textContent = new Set(state.words.map((word) => word.unit)).size;
 }
 
-function saveCsvImport(event) {
+async function serverImportedLists(options = {}) {
+  const response = await fetch(IMPORTED_LISTS_API, { cache: "no-store", ...options });
+  const payload = await response.json();
+  if (!response.ok) throw new Error(payload.error || "Không thể lưu hoặc đọc file CSV trong thư mục dự án.");
+  return decodeImportedLists(JSON.stringify(payload));
+}
+
+async function persistServerList(list) {
+  const lists = await serverImportedLists({
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(list),
+  });
+  const saved = lists.find((entry) => entry.id === list.id);
+  if (!saved || saved.name !== list.name || saved.type !== normalizeListType(list.type)
+    || saved.words.length !== list.words.length
+    || saved.words.some((word, index) => ["hiragana", "kanji", "hanViet", "meaning"].some((key) => word[key] !== list.words[index][key]))) {
+    throw new Error("Server chưa xác nhận lưu đầy đủ danh sách.");
+  }
+  return lists;
+}
+
+function mergeImportedLists(serverLists, browserLists) {
+  const lists = new Map(browserLists.map((list) => [list.id, list]));
+  serverLists.forEach((list) => lists.set(list.id, list));
+  return [...lists.values()];
+}
+
+async function loadImportedLists() {
+  let browserLists = [];
+  let browserError = false;
+  try {
+    browserLists = decodeImportedLists(localStorage.getItem(IMPORTED_LISTS_STORAGE_KEY));
+  } catch {
+    browserError = true;
+  }
+  let serverLists;
+  try {
+    const response = await fetch(IMPORTED_LISTS_API, { cache: "no-store" });
+    if (response.status === 404 || response.status === 405 || !response.headers.get("content-type")?.includes("application/json")) {
+      throw new Error("Static server");
+    }
+    state.csvStorage = "unavailable";
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || "Không thể đọc file CSV đã lưu trong dự án.");
+    serverLists = decodeImportedLists(JSON.stringify(payload));
+    state.csvStorage = "server";
+  } catch (error) {
+    $("#import-csv-status").textContent = state.csvStorage === "unavailable"
+      ? `${error.message} Hãy kiểm tra server rồi tải lại trang trước khi thêm danh sách.`
+      : browserError ? "Không thể đọc danh sách CSV đã lưu trong trình duyệt."
+        : "Đang lưu trong trình duyệt. Chạy python3 server.py để tự lưu file CSV vào thư mục dự án.";
+    return browserLists;
+  }
+
+  // Move legacy lists to disk with their original IDs so study progress still matches.
+  let migrationFailed = false;
+  for (const list of browserLists) {
+    if (serverLists.some((saved) => saved.id === list.id)) continue;
+    try {
+      serverLists = await persistServerList(list);
+    } catch {
+      migrationFailed = true;
+    }
+  }
+  $("#import-csv-status").textContent = migrationFailed
+    ? "Một số danh sách cũ vẫn chỉ nằm trong trình duyệt vì chưa lưu được vào dự án. Hãy kiểm tra server và tên danh sách rồi tải lại trang."
+    : browserError ? "Đã nạp danh sách từ thư mục dự án; chưa đọc được các danh sách cũ trong trình duyệt."
+      : `Tự lưu CSV vào thư mục imported-lists/.${serverLists.length ? ` Đã nạp ${serverLists.length} danh sách đã lưu.` : ""}`;
+  return mergeImportedLists(serverLists, browserLists);
+}
+
+function setImportSaving(saving) {
+  importSaving = saving;
+  $("#import-csv-submit").disabled = saving || !importWords.length;
+  $("#import-csv-submit").textContent = saving ? "Đang lưu..." : "Thêm danh sách";
+  ["#import-csv-file", "#import-csv-name", "#import-csv-type", "#close-csv-import", "#cancel-csv-import"].forEach((selector) => {
+    $(selector).disabled = saving;
+  });
+  $("#import-csv-new-type").disabled = saving || $("#import-csv-type").value !== "new";
+}
+
+async function saveCsvImport(event) {
   event.preventDefault();
-  if (!importWords.length) return;
+  if (importSaving || !importWords.length) return;
+  showImportError("");
+  if (state.csvStorage === "unavailable") {
+    showImportError("Chưa thể đọc danh sách trong dự án. Hãy kiểm tra server rồi tải lại trang trước khi thêm danh sách.");
+    return;
+  }
   const name = $("#import-csv-name").value.trim();
   if (!name || name.length > 80) {
     showImportError("Hãy nhập tên danh sách từ 1 đến 80 ký tự.");
     $("#import-csv-name").focus();
     return;
   }
+  let type;
+  try {
+    const selectedType = $("#import-csv-type").value;
+    if (selectedType === "new") type = normalizeListType($("#import-csv-new-type").value);
+    else {
+      type = listTypes().get(selectedType);
+      if (!type) throw new Error("Hãy chọn loại danh sách.");
+    }
+  } catch (error) {
+    showImportError(error.message);
+    return;
+  }
   let lists;
   try {
-    lists = decodeImportedLists(localStorage.getItem(IMPORTED_LISTS_STORAGE_KEY));
+    lists = state.csvStorage === "server" ? state.importedLists : decodeImportedLists(localStorage.getItem(IMPORTED_LISTS_STORAGE_KEY));
   } catch {
     showImportError("Không thể đọc danh sách đã lưu. Hãy kiểm tra quyền lưu dữ liệu của trình duyệt; dữ liệu hiện có chưa bị thay đổi.");
     return;
   }
-  if (lists.some((list) => normalize(list.name) === normalize(name))) {
-    showImportError("Tên danh sách đã tồn tại. Hãy chọn tên khác để dễ phân biệt.");
+  if (lists.some((list) => normalize(list.name) === normalize(name) && listTypeKey(list.type) === listTypeKey(type))) {
+    showImportError("Tên danh sách đã tồn tại trong loại này. Hãy chọn tên khác để dễ phân biệt.");
     return;
   }
+  type = listTypes().get(listTypeKey(type))
+    || lists.find((list) => listTypeKey(list.type) === listTypeKey(type))?.type || type;
   const randomId = Array.from(crypto.getRandomValues(new Uint8Array(16)), (byte) => byte.toString(16).padStart(2, "0")).join("");
-  const list = { id: `csv-${randomId}`, name, words: importWords };
-  const updated = [...lists, list];
+  const list = { id: `csv-${randomId}`, name, type, words: importWords, ...(importCsvSource ? { csv: importCsvSource } : {}) };
+  let updated = [...lists, list];
+  setImportSaving(true);
   try {
-    localStorage.setItem(IMPORTED_LISTS_STORAGE_KEY, JSON.stringify({ version: 1, lists: updated }));
-  } catch {
-    showImportError("Chưa thể lưu danh sách: bộ nhớ trình duyệt đã đầy hoặc bị chặn. Hãy giải phóng dung lượng hoặc cho phép lưu dữ liệu rồi thử lại.");
+    if (state.csvStorage === "server") {
+      const serverLists = await persistServerList(list);
+      updated = mergeImportedLists(serverLists, lists);
+      try {
+        // Disk is authoritative; the browser cache need not duplicate the original files.
+        const savedIds = new Set(serverLists.map((saved) => saved.id));
+        const cached = updated.map(({ csv, ...saved }) => savedIds.has(saved.id) ? saved : { ...saved, ...(csv ? { csv } : {}) });
+        localStorage.setItem(IMPORTED_LISTS_STORAGE_KEY, JSON.stringify({ version: 1, lists: cached }));
+      } catch { /* The CSV and list have already been saved to disk. */ }
+    } else {
+      localStorage.setItem(IMPORTED_LISTS_STORAGE_KEY, JSON.stringify({ version: 1, lists: updated }));
+    }
+  } catch (error) {
+    showImportError(state.csvStorage === "server"
+      ? `Chưa thể lưu file CSV vào dự án: ${error.message} Hãy thử lại.`
+      : "Chưa thể lưu danh sách: bộ nhớ trình duyệt đã đầy hoặc bị chặn. Hãy giải phóng dung lượng hoặc cho phép lưu dữ liệu rồi thử lại.");
     return;
+  } finally {
+    setImportSaving(false);
   }
   applyImportedLists(updated);
+  if (state.lessonTypeFilter) state.lessonTypeFilter = listTypeKey(type);
   setUnit(list.id);
   renderFlaggedWords();
   importDialog.close();
-  $("#import-csv-status").textContent = `Đã thêm “${name}” với ${list.words.length} từ vựng. Danh sách đã sẵn sàng để học.`;
+  $("#import-csv-status").textContent = `Đã thêm “${name}” (${type}) với ${list.words.length} từ vựng. `
+    + (state.csvStorage === "server" ? "Đã lưu file CSV vào dự án; lần sau mở app sẽ tự nạp lại." : "Đã lưu trong trình duyệt này; mở lại cùng địa chỉ để tiếp tục học.");
   focusLessonCard(list.id);
 }
 
@@ -564,28 +728,75 @@ function updateOverview() {
 function renderLessons() {
   const template = $("#lesson-template");
   lessonGrid.textContent = "";
-  const units = sortUnits(new Set(state.words.map((word) => word.unit)));
+  renderLessonTypeFilter();
+  const units = visibleLessonUnits();
   const studyUnits = new Set(getStudyUnits());
+  lessonGrid.classList.toggle("is-empty", !units.length);
+  if (!units.length) {
+    const empty = document.createElement("p");
+    empty.className = "loading";
+    empty.textContent = "Chưa có danh sách thuộc loại này. Hãy nhập CSV hoặc chọn Tất cả loại.";
+    lessonGrid.append(empty);
+  }
 
   units.forEach((unit) => {
     const fragment = template.content.cloneNode(true);
     const card = fragment.querySelector(".lesson-card");
     const stats = progressForUnit(unit);
     const selected = studyUnits.has(unit);
+    const type = unitType(unit);
     card.dataset.unit = unit;
+    card.title = `${displayUnit(unit)} · ${type}`;
     card.classList.toggle("imported-lesson", state.importedLists.some((list) => list.id === unit));
     card.classList.toggle("selected", selected);
     card.classList.toggle("selection-mode", state.isSelectingStudyScope);
     card.setAttribute("aria-pressed", String(selected));
     card.setAttribute("aria-label", state.isSelectingStudyScope
-      ? `${selected ? "Bỏ" : "Thêm"} ${displayUnit(unit)} ${selected ? "khỏi" : "vào"} bộ ôn`
-      : `Chọn ${displayUnit(unit)} để ôn riêng`);
+      ? `${selected ? "Bỏ" : "Thêm"} ${displayUnit(unit)} (${type}) ${selected ? "khỏi" : "vào"} bộ ôn`
+      : `Chọn ${displayUnit(unit)} (${type}) để ôn riêng`);
     fragment.querySelector(".lesson-number").textContent = displayUnit(unit);
+    fragment.querySelector(".lesson-type").textContent = type;
     fragment.querySelector(".lesson-meta strong").textContent = `${stats.total} từ vựng`;
     fragment.querySelector(".lesson-meta small").textContent = stats.mastered ? `${stats.mastered} đã thuộc` : "Sẵn sàng luyện";
     fragment.querySelector(".lesson-progress i").style.width = `${stats.total ? (stats.mastered / stats.total) * 100 : 0}%`;
     lessonGrid.append(fragment);
   });
+}
+
+function unitType(unit) {
+  const list = state.importedLists.find((entry) => entry.id === unit);
+  return list ? normalizeListType(list.type) : BUILTIN_LIST_TYPE;
+}
+
+function visibleLessonUnits() {
+  return sortUnits(new Set(state.words.map((word) => word.unit)))
+    .filter((unit) => !state.lessonTypeFilter || listTypeKey(unitType(unit)) === state.lessonTypeFilter);
+}
+
+function renderLessonTypeFilter() {
+  const select = $("#lesson-type-filter");
+  const types = listTypes();
+  if (state.lessonTypeFilter && !types.has(state.lessonTypeFilter)) state.lessonTypeFilter = "";
+  const units = new Set(state.words.map((word) => word.unit));
+  const counts = new Map();
+  units.forEach((unit) => {
+    const key = listTypeKey(unitType(unit));
+    counts.set(key, (counts.get(key) || 0) + 1);
+  });
+  select.textContent = "";
+  appendTypeOption(select, "", `Tất cả loại (${units.size})`);
+  types.forEach((type, key) => appendTypeOption(select, key, `${type} (${counts.get(key) || 0})`));
+  select.value = state.lessonTypeFilter;
+  const visible = new Set(visibleLessonUnits());
+  const hiddenSelected = getStudyUnits().filter((unit) => !visible.has(unit)).length;
+  $("#lesson-filter-summary").textContent = `Hiển thị ${visible.size}/${units.size} danh sách.`
+    + (hiddenSelected ? ` Bộ ôn vẫn gồm ${hiddenSelected} danh sách ngoài bộ lọc.` : "");
+}
+
+function setLessonTypeFilter(type) {
+  state.lessonTypeFilter = listTypes().has(type) ? type : "";
+  renderLessons();
+  lessonGrid.scrollLeft = 0;
 }
 
 function setUnit(unit) {
@@ -1002,6 +1213,7 @@ function renderQuestion() {
   $("#prompt-label").textContent = isHanVietCharacter ? "HÁN TỰ RIÊNG" : mode.promptLabel;
   $("#practice-title").textContent = mode.prompt(word);
   $("#question-support").textContent = mode.support(word);
+  $("#question-support").hidden = !$("#question-support").textContent;
   $("#answer-form").hidden = usesKanjiBuilder;
   $("#kanji-builder").hidden = !usesKanjiBuilder;
   $("#answer-input").value = "";
@@ -1026,9 +1238,7 @@ function renderQuestion() {
 
 function answerRevealText(word, mode) {
   if (!word.hanVietCharacter) return `${mode.answerLabel}: ${mode.answer(word)}  ·  Nghĩa: ${word.meaning}`;
-  const source = word.sourceWord;
-  const context = [source.kanji, source.hiragana].filter(Boolean).join("  ·  ");
-  return `${mode.answerLabel}: ${mode.answer(word)}  ·  Từ gốc: ${context}  ·  ${source.meaning}`;
+  return `${mode.answerLabel}: ${mode.answer(word)}`;
 }
 
 function revealAnswer() {
@@ -1149,7 +1359,7 @@ async function initialize() {
     console.error(error);
   }
   try {
-    applyImportedLists(decodeImportedLists(localStorage.getItem(IMPORTED_LISTS_STORAGE_KEY)));
+    applyImportedLists(await loadImportedLists());
   } catch {
     $("#import-csv-status").textContent = "Không thể đọc danh sách CSV đã lưu trong trình duyệt.";
   }
@@ -1158,20 +1368,29 @@ async function initialize() {
   if (state.words.length) {
     setUnit(sortUnits(new Set(state.words.map((word) => word.unit)))[0]);
   } else {
-    lessonGrid.innerHTML = `<p class="loading">Không thể nạp dữ liệu. Hãy mở trang qua một local server (ví dụ: <code>python -m http.server</code>) hoặc nhập danh sách CSV của bạn.</p>`;
+    renderLessonTypeFilter();
+    lessonGrid.innerHTML = `<p class="loading">Không thể nạp dữ liệu. Hãy chạy <code>python3 server.py</code> rồi mở app, hoặc nhập danh sách CSV của bạn.</p>`;
   }
   updateOverview();
   renderFlaggedWords();
   $("#open-csv-import").disabled = false;
+  $("#import-csv-storage-help").textContent = state.csvStorage === "server"
+    ? "Khi thêm danh sách, file CSV và thông tin danh sách được tự lưu vào thư mục imported-lists/ trong dự án. Mở app lần sau sẽ tự nạp lại, kể cả khi đổi trình duyệt."
+    : state.csvStorage === "unavailable"
+      ? "Chưa đọc được nơi lưu CSV trong dự án. Hãy kiểm tra server rồi tải lại trang."
+      : "Danh sách và nội dung CSV chỉ được lưu trong trình duyệt này. Để tự lưu file vào dự án, hãy chạy python3 server.py rồi mở địa chỉ server hiển thị.";
 }
 
 $("#open-csv-import").addEventListener("click", openCsvImport);
 $("#close-csv-import").addEventListener("click", () => importDialog.close());
 $("#cancel-csv-import").addEventListener("click", () => importDialog.close());
 $("#import-csv-file").addEventListener("change", readCsvImport);
+$("#import-csv-type").addEventListener("change", toggleCustomListType);
 $("#import-csv-form").addEventListener("submit", saveCsvImport);
+$("#lesson-type-filter").addEventListener("change", (event) => setLessonTypeFilter(event.target.value));
 importDialog.addEventListener("close", () => { importReadVersion += 1; });
-importDialog.addEventListener("click", (event) => { if (event.target === importDialog) importDialog.close(); });
+importDialog.addEventListener("cancel", (event) => { if (importSaving) event.preventDefault(); });
+importDialog.addEventListener("click", (event) => { if (event.target === importDialog && !importSaving) importDialog.close(); });
 
 lessonGrid.addEventListener("click", (event) => {
   const card = event.target.closest(".lesson-card");
@@ -1246,10 +1465,14 @@ $("#retry-flashcards").addEventListener("click", () => {
 });
 flashcardDialog.addEventListener("click", (event) => { if (event.target === flashcardDialog) closeFlashcards(); });
 
-window.addEventListener("storage", (event) => {
+window.addEventListener("storage", async (event) => {
   if (event.key === IMPORTED_LISTS_STORAGE_KEY || event.key === null) {
     try {
-      applyImportedLists(decodeImportedLists(localStorage.getItem(IMPORTED_LISTS_STORAGE_KEY)));
+      const version = importedListsVersion;
+      const browserLists = decodeImportedLists(localStorage.getItem(IMPORTED_LISTS_STORAGE_KEY));
+      const lists = state.csvStorage === "server" ? mergeImportedLists(await serverImportedLists(), browserLists) : browserLists;
+      if (version !== importedListsVersion) return;
+      applyImportedLists(lists);
       state.studyUnits = new Set(getStudyUnits());
       if (!state.studyUnits.size && state.words.length) state.studyUnits.add(sortUnits(new Set(state.words.map((word) => word.unit)))[0]);
       state.selectedUnit = getStudyUnits()[0] || "";

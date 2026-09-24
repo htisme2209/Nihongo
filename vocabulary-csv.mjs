@@ -1,6 +1,20 @@
 export const IMPORTED_LISTS_STORAGE_KEY = "kotoba-dojo-imported-lists-v1";
 export const MAX_CSV_BYTES = 2 * 1024 * 1024;
 export const MAX_CSV_WORDS = 5000;
+export const DEFAULT_LIST_TYPE = "Chưa phân loại";
+export const BUILTIN_LIST_TYPE = "Theo bài";
+export const PRESET_LIST_TYPES = [BUILTIN_LIST_TYPE, "JLPT N5", "JLPT N4", "JLPT N3", "JLPT N2", "JLPT N1", "Theo chủ đề", DEFAULT_LIST_TYPE];
+
+export function normalizeListType(value = DEFAULT_LIST_TYPE) {
+  if (typeof value !== "string") throw new Error("Loại danh sách không hợp lệ.");
+  const type = value.normalize("NFKC").trim().replace(/\s+/g, " ");
+  if (!type || type.length > 50) throw new Error("Hãy nhập tên loại từ 1 đến 50 ký tự.");
+  return type;
+}
+
+export function listTypeKey(type) {
+  return `type:${normalizeListType(type).toLocaleLowerCase("vi-VN")}`;
+}
 
 function csvRows(text) {
   const rows = [];
@@ -104,7 +118,7 @@ export function decodeImportedLists(raw) {
     }
     ids.add(list.id);
   }
-  return saved.lists;
+  return saved.lists.map((list) => ({ ...list, type: normalizeListType(list.type) }));
 }
 
 export function importedListWords(list) {
